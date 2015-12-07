@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Photo Edit</string>
     <string name="action_settings">Settings</string>
+    <string name="provide_storage_permission">Please enable Storage permission for this application.</string>
+    <string name="settings">SETTINGS</string>
 </resources>

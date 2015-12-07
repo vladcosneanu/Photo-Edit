@@ -13,13 +13,22 @@ public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
+    private CollectionFragment collectionFragment;
+    private CanvasFragment canvasFragment;
+
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new CollectionFragment();
+                if (collectionFragment == null) {
+                    collectionFragment = new CollectionFragment();
+                }
+                return collectionFragment;
             case 1:
-                return new CanvasFragment();
+                if (canvasFragment == null) {
+                    canvasFragment = new CanvasFragment();
+                }
+                return canvasFragment;
             default:
                 return null;
         }
