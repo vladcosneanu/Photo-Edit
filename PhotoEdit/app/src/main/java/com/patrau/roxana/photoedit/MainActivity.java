@@ -1,6 +1,7 @@
 package com.patrau.roxana.photoedit;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int SELECT_PHOTO = 2;
 
     private CoordinatorLayout coordinatorLayout;
     private ViewPager mPager;
@@ -165,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dispatchTakePictureIntent();
                 break;
             case R.id.open_button:
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, SELECT_PHOTO);
                 break;
             default:
                 break;
@@ -176,6 +181,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Bitmap imageBitmap = BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath());
             ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(imageBitmap);
+        } else if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(
+                    selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            Bitmap selectedImageBitmap = BitmapFactory.decodeFile(filePath);
+            ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(selectedImageBitmap);
         }
     }
 }
