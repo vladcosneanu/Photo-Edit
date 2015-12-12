@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,8 +22,10 @@ import android.view.View;
 import com.patrau.roxana.photoedit.adapters.ScreenSlidePagerAdapter;
 import com.patrau.roxana.photoedit.fragments.CanvasFragment;
 import com.patrau.roxana.photoedit.helper.Helper;
+import com.patrau.roxana.photoedit.helper.ImageProcessor;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -83,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         photoButton.setOnClickListener(this);
         openButton = (FloatingActionButton) findViewById(R.id.open_button);
         openButton.setOnClickListener(this);
+
+        if (!Environment.getExternalStorageDirectory().canWrite()) {
+            displayStoragePermissionSnackBar();
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -94,17 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.provide_storage_permission, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.fromParts("package", getPackageName(), null));
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                            }
-                        });
-                snackbar.show();
+                displayStoragePermissionSnackBar();
             }
             // Continue only if the File was successfully created
             if (currentPhotoFile != null) {
@@ -113,6 +110,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
+    }
+
+    private void displayStoragePermissionSnackBar() {
+        Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.provide_storage_permission, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.settings, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", getPackageName(), null));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        snackbar.show();
     }
 
     @Override
@@ -167,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dispatchTakePictureIntent();
                 break;
             case R.id.open_button:
+                if (!Environment.getExternalStorageDirectory().canWrite()) {
+                    displayStoragePermissionSnackBar();
+
+                    return;
+                }
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -194,7 +210,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             cursor.close();
 
             Bitmap selectedImageBitmap = BitmapFactory.decodeFile(filePath);
-            ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(selectedImageBitmap);
+
+            ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(ImageProcessor.doGreyscale(selectedImageBitmap));
         }
     }
 }

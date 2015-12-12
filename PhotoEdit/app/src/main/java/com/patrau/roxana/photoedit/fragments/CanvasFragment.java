@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.R;
 
@@ -14,6 +15,7 @@ public class CanvasFragment extends Fragment {
 
     private View mView;
     private ImageView imageView;
+    private TextView addImageText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -22,6 +24,7 @@ public class CanvasFragment extends Fragment {
                 R.layout.fragment_canvas, container, false);
 
         imageView = (ImageView) mView.findViewById(R.id.canvas_image);
+        addImageText = (TextView) mView.findViewById(R.id.add_image_text);
 
         return mView;
     }
@@ -32,7 +35,9 @@ public class CanvasFragment extends Fragment {
 
     public void setImage(Bitmap bitmap) {
         if (imageView != null) {
+            imageView.setBackgroundResource(0);
             imageView.setImageBitmap(bitmap);
+            addImageText.setVisibility(View.GONE);
         }
     }
 }

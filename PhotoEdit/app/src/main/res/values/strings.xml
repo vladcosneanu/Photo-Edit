@@ -3,4 +3,5 @@
     <string name="action_settings">Settings</string>
     <string name="provide_storage_permission">Please enable Storage permission for this application.</string>
     <string name="settings">SETTINGS</string>
+    <string name="add_image">Tap the \'+\' button to\nadd an image to the canvas.</string>
 </resources>
