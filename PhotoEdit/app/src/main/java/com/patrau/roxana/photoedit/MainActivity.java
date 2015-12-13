@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TransformationReceiver {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int SELECT_PHOTO = 2;
@@ -175,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.photo_button:
+                photoButton.hide();
+                openButton.hide();
+                canvasButtonsDisplayed = false;
+
                 dispatchTakePictureIntent();
                 break;
             case R.id.open_button:
@@ -183,6 +188,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     return;
                 }
+
+                photoButton.hide();
+                openButton.hide();
+                canvasButtonsDisplayed = false;
+
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -211,7 +221,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Bitmap selectedImageBitmap = BitmapFactory.decodeFile(filePath);
 
-            ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(ImageProcessor.doGreyscale(selectedImageBitmap));
+            ImageProcessor.doGreyscale(selectedImageBitmap, this);
         }
+    }
+
+    public void onTransformationProgress(float progress) {
+        Log.d("Vlad", "progress: " + progress);
+    }
+
+    public void onTransformationComplete(Bitmap bitmap) {
+        Log.d("Vlad", "complete");
+        ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(bitmap);
     }
 }
