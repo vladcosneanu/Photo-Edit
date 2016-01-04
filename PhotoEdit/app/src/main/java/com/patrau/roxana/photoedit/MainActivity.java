@@ -3,7 +3,6 @@ package com.patrau.roxana.photoedit;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,10 +22,9 @@ import android.view.View;
 import com.patrau.roxana.photoedit.adapters.ScreenSlidePagerAdapter;
 import com.patrau.roxana.photoedit.fragments.CanvasFragment;
 import com.patrau.roxana.photoedit.helper.Helper;
-import com.patrau.roxana.photoedit.helper.ImageProcessor;
+import com.patrau.roxana.photoedit.views.CustomViewPager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TransformationReceiver {
@@ -34,8 +32,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int SELECT_PHOTO = 2;
 
+    public static Bitmap currentBitmap;
+
     private CoordinatorLayout coordinatorLayout;
-    private ViewPager mPager;
+    private CustomViewPager mPager;
     private ScreenSlidePagerAdapter mPagerAdapter;
     private FloatingActionButton plusButton;
     private FloatingActionButton photoButton;
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager = (CustomViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 canvasButtonsDisplayed = false;
                 switch (position) {
                     case 0:
-                        plusButton.hide();
-                        photoButton.hide();
-                        openButton.hide();
+                        hideAllFloatingActionButtons();
                         break;
                     case 1:
                         plusButton.show();
@@ -161,6 +159,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    public void hideAllFloatingActionButtons() {
+        plusButton.hide();
+        photoButton.hide();
+        openButton.hide();
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -205,9 +209,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Bitmap imageBitmap = BitmapFactory.decodeFile(currentPhotoFile.getAbsolutePath());
-            ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(imageBitmap);
+            hideAllFloatingActionButtons();
+            setViewPagerEnabled(false);
+
+            CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+            canvasFragment.setOriginalFilePath(currentPhotoFile.getAbsolutePath());
+            canvasFragment.attachGrayScaleController();
         } else if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            hideAllFloatingActionButtons();
+            setViewPagerEnabled(false);
+
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -219,9 +230,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String filePath = cursor.getString(columnIndex);
             cursor.close();
 
-            Bitmap selectedImageBitmap = BitmapFactory.decodeFile(filePath);
-
-            ImageProcessor.doGreyscale(selectedImageBitmap, this);
+            CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+            canvasFragment.setOriginalFilePath(filePath);
+            canvasFragment.attachGrayScaleController();
         }
     }
 
@@ -230,7 +241,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onTransformationComplete(Bitmap bitmap) {
-        Log.d("Vlad", "complete");
-        ((CanvasFragment) mPagerAdapter.getItem(1)).setImage(bitmap);
+        ((CanvasFragment) mPagerAdapter.getItem(1)).setCanvasImage(bitmap);
+    }
+
+    public void setViewPagerEnabled(boolean enabled) {
+        mPager.setPagingEnabled(enabled);
     }
 }

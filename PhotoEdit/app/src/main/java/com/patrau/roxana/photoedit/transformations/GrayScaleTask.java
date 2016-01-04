@@ -10,23 +10,30 @@ import android.os.AsyncTask;
 
 import com.patrau.roxana.photoedit.TransformationReceiver;
 
-public class GreyScaleTask extends AsyncTask<String, Float, Bitmap> {
+public class GrayScaleTask extends AsyncTask<String, Float, Bitmap> {
+
+    // constant factors
+    public static final float DEFAULT_RED = 0.299f;
+    public static final float DEFAULT_GREEN = 0.587f;
+    public static final float DEFAULT_BLUE = 0.114f;
 
     private Bitmap inputBitmap;
     private TransformationReceiver transformationReceiver;
 
-    public GreyScaleTask(Bitmap inputBitmap, TransformationReceiver transformationReceiver) {
+    private float red = DEFAULT_RED;
+    private float green = DEFAULT_GREEN;
+    private float blue = DEFAULT_BLUE;
+
+    public GrayScaleTask(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float red, float green, float blue) {
         this.inputBitmap = inputBitmap;
         this.transformationReceiver = transformationReceiver;
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
     }
 
     @Override
     protected Bitmap doInBackground(String... params) {
-        // constant factors
-        final float GS_RED = 0.299f;
-        final float GS_GREEN = 0.587f;
-        final float GS_BLUE = 0.114f;
-
         // create output bitmap
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap.getWidth(), inputBitmap.getHeight(), inputBitmap.getConfig());
         Canvas canvas = new Canvas(outputBitmap);
@@ -34,9 +41,9 @@ public class GreyScaleTask extends AsyncTask<String, Float, Bitmap> {
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         float[] mat = new float[]{
-                GS_RED, GS_GREEN, GS_BLUE, 0, 0,
-                GS_RED, GS_GREEN, GS_BLUE, 0, 0,
-                GS_RED, GS_GREEN, GS_BLUE, 0, 0,
+                red, green, blue, 0, 0,
+                red, green, blue, 0, 0,
+                red, green, blue, 0, 0,
                 0, 0, 0, 1, 0,};
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(mat);
         paint.setColorFilter(filter);
