@@ -5,4 +5,9 @@
     <string name="settings">SETTINGS</string>
     <string name="add_image">Tap the \'+\' button to\nadd an image to the canvas.</string>
     <string name="grayscale">Grayscale</string>
+    <string name="choose_effect">Choose Effect</string>
+    <string name="collection">Collection</string>
+    <string name="canvas">Canvas</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -9,6 +9,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dip"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1">
 
         <RelativeLayout
@@ -36,10 +37,17 @@
         </RelativeLayout>
     </ScrollView>
 
-    <FrameLayout
-        android:id="@+id/controllers_frame"
+    <RelativeLayout
+        android:id="@+id/controllers_frame_container"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="5dp"></FrameLayout>
+        android:background="@drawable/controllers_frame_container">
+
+        <FrameLayout
+            android:id="@+id/controllers_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"></FrameLayout>
+    </RelativeLayout>
+
 </LinearLayout>

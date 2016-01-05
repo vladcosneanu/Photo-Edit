@@ -11,12 +11,27 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/grayscale"
-            android:textSize="22sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/effect_button"
+                android:padding="6dp"
+                android:src="@drawable/ic_arrow_back_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/grayscale"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
 
         <SeekBar
             android:id="@+id/grayscale_red_seekbar"

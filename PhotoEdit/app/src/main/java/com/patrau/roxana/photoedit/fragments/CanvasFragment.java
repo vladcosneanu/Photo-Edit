@@ -21,6 +21,7 @@ public class CanvasFragment extends Fragment {
     private TextView addImageText;
     private String originalFilePath;
     private View canvasContainer;
+    private View controllersFrameContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,6 +32,8 @@ public class CanvasFragment extends Fragment {
         imageView = (ImageView) mView.findViewById(R.id.canvas_image);
         addImageText = (TextView) mView.findViewById(R.id.add_image_text);
         canvasContainer = mView.findViewById(R.id.canvas_container);
+        controllersFrameContainer = mView.findViewById(R.id.controllers_frame_container);
+        controllersFrameContainer.setVisibility(View.GONE);
 
         return mView;
     }
@@ -44,6 +47,7 @@ public class CanvasFragment extends Fragment {
             canvasContainer.setBackgroundResource(0);
             imageView.setImageBitmap(bitmap);
             addImageText.setVisibility(View.GONE);
+            controllersFrameContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -51,6 +55,19 @@ public class CanvasFragment extends Fragment {
         this.originalFilePath = originalFilePath;
         MainActivity.currentBitmap = BitmapFactory.decodeFile(originalFilePath);
         setCanvasImage(MainActivity.currentBitmap);
+    }
+
+    public void hideControllersFrameContainer() {
+        controllersFrameContainer.setVisibility(View.GONE);
+    }
+
+    public void attachEffectsFragment() {
+        EffectsFragment effectsFragment = new EffectsFragment();
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        ft.replace(R.id.controllers_frame, effectsFragment);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.addToBackStack(null);
+        ft.commitAllowingStateLoss();
     }
 
     public void attachGrayScaleController() {

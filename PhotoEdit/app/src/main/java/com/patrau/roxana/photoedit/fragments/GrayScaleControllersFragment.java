@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 
 import com.patrau.roxana.photoedit.MainActivity;
@@ -16,6 +17,7 @@ import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 public class GrayScaleControllersFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
     private View mView;
+    private ImageButton backButton;
     private SeekBar redSeekBar;
     private SeekBar greenSeekBar;
     private SeekBar blueSeekBar;
@@ -38,6 +40,9 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
         blueSeekBar = (SeekBar) mView.findViewById(R.id.grayscale_blue_seekbar);
         blueSeekBar.setProgress((int) (blueValue * 1000));
         blueSeekBar.setOnSeekBarChangeListener(this);
+
+        backButton = (ImageButton) mView.findViewById(R.id.back_button);
+        backButton.setOnClickListener((MainActivity) getActivity());
 
         return mView;
     }

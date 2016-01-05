@@ -43,6 +43,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean canvasButtonsDisplayed = false;
     private File currentPhotoFile;
 
+    private MenuItem doneMenuItem;
+    private boolean displayDoneMenuItem = false;
+    private MenuItem cancelMenuItem;
+    private boolean displayCancelMenuItem = false;
+
+    private boolean inCanvasEditMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setTitle(getString(R.string.collection));
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) findViewById(R.id.pager);
@@ -65,9 +74,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 canvasButtonsDisplayed = false;
                 switch (position) {
                     case 0:
+                        setTitle(getString(R.string.collection));
                         hideAllFloatingActionButtons();
+
+                        displayDoneAndCancelMenuItems(false);
+
                         break;
                     case 1:
+                        setTitle(getString(R.string.canvas));
                         plusButton.show();
                         break;
                 }
@@ -127,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (mPager.getCurrentItem() == 0 || inCanvasEditMode) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
@@ -141,6 +155,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        doneMenuItem = menu.getItem(0);
+        if (displayDoneMenuItem) {
+            doneMenuItem.setVisible(true);
+        } else {
+            doneMenuItem.setVisible(false);
+        }
+
+        cancelMenuItem = menu.getItem(1);
+        if (displayCancelMenuItem) {
+            cancelMenuItem.setVisible(true);
+        } else {
+            cancelMenuItem.setVisible(false);
+        }
+
         return true;
     }
 
@@ -150,13 +179,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        switch (id) {
+            case R.id.action_done:
+                finishCanvasEdit();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                break;
+            case R.id.action_cancel:
+                finishCanvasEdit();
+
+                break;
+            default:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void finishCanvasEdit() {
+        inCanvasEditMode = false;
+
+        setViewPagerEnabled(true);
+        displayDoneAndCancelMenuItems(false);
+        ((CanvasFragment) mPagerAdapter.getItem(1)).hideControllersFrameContainer();
+
+        plusButton.show();
     }
 
     public void hideAllFloatingActionButtons() {
@@ -201,6 +246,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
                 break;
+            case R.id.back_button:
+                CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+                canvasFragment.attachEffectsFragment();
+                break;
             default:
                 break;
         }
@@ -209,16 +258,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            hideAllFloatingActionButtons();
-            setViewPagerEnabled(false);
-
-            CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
-            canvasFragment.setOriginalFilePath(currentPhotoFile.getAbsolutePath());
-            canvasFragment.attachGrayScaleController();
+            prepareForCanvasEdit(currentPhotoFile.getAbsolutePath());
         } else if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
-            hideAllFloatingActionButtons();
-            setViewPagerEnabled(false);
-
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -230,10 +271,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String filePath = cursor.getString(columnIndex);
             cursor.close();
 
-            CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
-            canvasFragment.setOriginalFilePath(filePath);
-            canvasFragment.attachGrayScaleController();
+            prepareForCanvasEdit(filePath);
         }
+    }
+
+    private void prepareForCanvasEdit(String filePath) {
+        inCanvasEditMode = true;
+
+        hideAllFloatingActionButtons();
+        setViewPagerEnabled(false);
+        displayDoneAndCancelMenuItems(true);
+
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.setOriginalFilePath(filePath);
+        canvasFragment.attachEffectsFragment();
     }
 
     public void onTransformationProgress(float progress) {
@@ -246,5 +297,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setViewPagerEnabled(boolean enabled) {
         mPager.setPagingEnabled(enabled);
+    }
+
+    public void displayDoneAndCancelMenuItems(boolean display) {
+        if (doneMenuItem != null) {
+            doneMenuItem.setVisible(display);
+        } else {
+            displayDoneMenuItem = display;
+        }
+
+        if (cancelMenuItem != null) {
+            cancelMenuItem.setVisible(display);
+        } else {
+            displayCancelMenuItem = display;
+        }
+    }
+
+    public void attachGrayScaleController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachGrayScaleController();
     }
 }
