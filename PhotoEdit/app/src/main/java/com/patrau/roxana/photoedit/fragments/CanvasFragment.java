@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
+import com.patrau.roxana.photoedit.fragments.effects.BoostColorControllersFragment;
+import com.patrau.roxana.photoedit.fragments.effects.FlipControllersFragment;
+import com.patrau.roxana.photoedit.fragments.effects.GrayScaleControllersFragment;
 
 public class CanvasFragment extends Fragment {
 
@@ -61,21 +64,31 @@ public class CanvasFragment extends Fragment {
         controllersFrameContainer.setVisibility(View.GONE);
     }
 
-    public void attachEffectsFragment() {
-        EffectsFragment effectsFragment = new EffectsFragment();
+    private void attachControllersFragment(Fragment fragment) {
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        ft.replace(R.id.controllers_frame, effectsFragment);
+        ft.replace(R.id.controllers_frame, fragment);
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.addToBackStack(null);
         ft.commitAllowingStateLoss();
     }
 
+    public void attachEffectsFragment() {
+        EffectsFragment effectsFragment = new EffectsFragment();
+        attachControllersFragment(effectsFragment);
+    }
+
     public void attachGrayScaleController() {
         GrayScaleControllersFragment grayScaleControllersFragment = new GrayScaleControllersFragment();
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
-        ft.replace(R.id.controllers_frame, grayScaleControllersFragment);
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
+        attachControllersFragment(grayScaleControllersFragment);
+    }
+
+    public void attachFlipController() {
+        FlipControllersFragment flipControllersFragment = new FlipControllersFragment();
+        attachControllersFragment(flipControllersFragment);
+    }
+
+    public void attachBoostColorController() {
+        BoostColorControllersFragment boostColorControllersFragment = new BoostColorControllersFragment();
+        attachControllersFragment(boostColorControllersFragment);
     }
 }

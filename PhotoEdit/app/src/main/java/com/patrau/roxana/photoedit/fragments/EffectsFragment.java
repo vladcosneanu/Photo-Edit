@@ -8,11 +8,15 @@ import android.view.ViewGroup;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
+import com.patrau.roxana.photoedit.helper.ImageProcessor;
 
 public class EffectsFragment extends Fragment implements View.OnClickListener {
 
     private View mView;
     private View grayscaleCoontainer;
+    private View invertCoontainer;
+    private View flipCoontainer;
+    private View boostColorCoontainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -20,6 +24,12 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_effects, container, false);
         grayscaleCoontainer = mView.findViewById(R.id.grayscale_container);
         grayscaleCoontainer.setOnClickListener(this);
+        invertCoontainer = mView.findViewById(R.id.invert_container);
+        invertCoontainer.setOnClickListener(this);
+        flipCoontainer = mView.findViewById(R.id.flip_container);
+        flipCoontainer.setOnClickListener(this);
+        boostColorCoontainer = mView.findViewById(R.id.boost_color_container);
+        boostColorCoontainer.setOnClickListener(this);
 
         return mView;
     }
@@ -29,6 +39,18 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.grayscale_container:
                 ((MainActivity) getActivity()).attachGrayScaleController();
+
+                break;
+            case R.id.invert_container:
+                ImageProcessor.doInvert(MainActivity.currentBitmap, (MainActivity) getActivity());
+
+                break;
+            case R.id.flip_container:
+                ((MainActivity) getActivity()).attachFlipController();
+
+                break;
+            case R.id.boost_color_container:
+                ((MainActivity) getActivity()).attachBoostColorController();
 
                 break;
         }

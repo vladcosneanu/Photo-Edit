@@ -317,4 +317,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
         canvasFragment.attachGrayScaleController();
     }
+
+    public void attachFlipController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachFlipController();
+    }
+
+    public void attachBoostColorController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachBoostColorController();
+    }
 }

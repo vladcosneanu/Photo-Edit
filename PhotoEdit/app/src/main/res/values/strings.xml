@@ -10,4 +10,9 @@
     <string name="canvas">Canvas</string>
     <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="invert_image">Invert image</string>
+    <string name="flip_image">Flip image</string>
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
+    <string name="boost_color">Boost color</string>
 </resources>

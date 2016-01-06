@@ -1,8 +1,7 @@
-package com.patrau.roxana.photoedit.fragments;
+package com.patrau.roxana.photoedit.fragments.effects;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,10 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
     private SeekBar blueSeekBar;
 
     private float redValue = GrayScaleTask.DEFAULT_RED;
-    private float greenValue = GrayScaleTask.DEFAULT_GREEN;;
-    private float blueValue = GrayScaleTask.DEFAULT_BLUE;;
+    private float greenValue = GrayScaleTask.DEFAULT_GREEN;
+    ;
+    private float blueValue = GrayScaleTask.DEFAULT_BLUE;
+    ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +78,7 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
                 blueValue = (float) seekBar.getProgress() / 1000;
                 break;
         }
-        Log.d("Vlad", "red: " + redValue + ", green: " + greenValue + ", blue: " + blueValue);
+
         ImageProcessor.doGreyscale(MainActivity.currentBitmap, activity, redValue, greenValue, blueValue);
     }
 }
