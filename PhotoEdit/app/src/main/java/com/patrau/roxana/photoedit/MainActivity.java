@@ -1,5 +1,8 @@
 package com.patrau.roxana.photoedit;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,21 +21,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.patrau.roxana.photoedit.adapters.ScreenSlidePagerAdapter;
 import com.patrau.roxana.photoedit.fragments.CanvasFragment;
+import com.patrau.roxana.photoedit.fragments.CollectionFragment;
 import com.patrau.roxana.photoedit.helper.Helper;
+import com.patrau.roxana.photoedit.interfaces.CanvasSaver;
+import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
+import com.patrau.roxana.photoedit.tasks.SaveCanvasTask;
 import com.patrau.roxana.photoedit.views.CustomViewPager;
 
 import java.io.File;
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TransformationReceiver {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TransformationReceiver, CanvasSaver {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int SELECT_PHOTO = 2;
 
-    public static Bitmap currentBitmap;
+    public static Bitmap originalBitmap;
+    public static Bitmap currentCanvasBitmap;
 
     private CoordinatorLayout coordinatorLayout;
     private CustomViewPager mPager;
@@ -40,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton plusButton;
     private FloatingActionButton photoButton;
     private FloatingActionButton openButton;
+    private ProgressDialog progressDialog;
     private boolean canvasButtonsDisplayed = false;
     private File currentPhotoFile;
 
@@ -59,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         setTitle(getString(R.string.collection));
+
+        // initialize a progress dialog that will be displayed with server requests
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.please_wait));
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(true);
+
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) findViewById(R.id.pager);
@@ -181,11 +198,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
         switch (id) {
             case R.id.action_done:
-                finishCanvasEdit();
+                displaySaveDialog();
 
                 break;
             case R.id.action_cancel:
-                finishCanvasEdit();
+                displayCancelDialog();
 
                 break;
             default:
@@ -282,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setViewPagerEnabled(false);
         displayDoneAndCancelMenuItems(true);
 
-        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        CanvasFragment canvasFragment = (CanvasFragment) mPagerAdapter.getItem(1);
         canvasFragment.setOriginalFilePath(filePath);
         canvasFragment.attachEffectsFragment();
     }
@@ -293,6 +310,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onTransformationComplete(Bitmap bitmap) {
         ((CanvasFragment) mPagerAdapter.getItem(1)).setCanvasImage(bitmap);
+    }
+
+    public void onCanvasSaveFailed() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, R.string.canvas_not_saved_successfully, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onCanvasSaveSuccess() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+                Toast.makeText(MainActivity.this, R.string.canvas_saved_successfully, Toast.LENGTH_SHORT).show();
+                finishCanvasEdit();
+
+                CollectionFragment collectionFragment = (CollectionFragment) mPagerAdapter.getItem(0);
+                collectionFragment.refreshCollection();
+            }
+        });
     }
 
     public void setViewPagerEnabled(boolean enabled) {
@@ -311,6 +352,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             displayCancelMenuItem = display;
         }
+    }
+
+    private void displaySaveDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.save_dialog_title);
+        builder.setMessage(R.string.save_dialog_message);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.show();
+                SaveCanvasTask saveCanvasTask = new SaveCanvasTask(currentCanvasBitmap, MainActivity.this);
+                saveCanvasTask.execute(new String[]{});
+            }
+        });
+        builder.setNegativeButton(R.string.no, null);
+        builder.show();
+    }
+
+    private void displayCancelDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.cancel_dialog_title);
+        builder.setMessage(R.string.cancel_dialog_message);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+                canvasFragment.setCanvasImage(MainActivity.originalBitmap);
+                finishCanvasEdit();
+            }
+        });
+        builder.setNegativeButton(R.string.no, null);
+        builder.show();
     }
 
     public void attachGrayScaleController() {

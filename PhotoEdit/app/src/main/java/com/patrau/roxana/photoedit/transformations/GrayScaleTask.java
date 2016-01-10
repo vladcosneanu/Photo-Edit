@@ -2,13 +2,12 @@ package com.patrau.roxana.photoedit.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 
-import com.patrau.roxana.photoedit.TransformationReceiver;
+import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 
 public class GrayScaleTask extends AsyncTask<String, Float, Bitmap> {
 

@@ -7,7 +7,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.AsyncTask;
 
-import com.patrau.roxana.photoedit.TransformationReceiver;
+import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 
 public class BoostColorTask extends AsyncTask<String, Float, Bitmap> {
 

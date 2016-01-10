@@ -51,7 +51,7 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         MainActivity activity = (MainActivity) getActivity();
-        ImageProcessor.doGreyscale(MainActivity.currentBitmap, activity, redValue, greenValue, blueValue);
+        ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 
     @Override
@@ -79,6 +79,6 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
                 break;
         }
 
-        ImageProcessor.doGreyscale(MainActivity.currentBitmap, activity, redValue, greenValue, blueValue);
+        ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 }

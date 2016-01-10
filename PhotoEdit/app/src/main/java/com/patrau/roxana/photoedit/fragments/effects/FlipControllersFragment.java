@@ -44,11 +44,11 @@ public class FlipControllersFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.flip_horizontal:
-                ImageProcessor.doFlip(MainActivity.currentBitmap, (MainActivity) getActivity(), FlipTask.FLIP_HORIZONTAL);
+                ImageProcessor.doFlip(MainActivity.originalBitmap, (MainActivity) getActivity(), FlipTask.FLIP_HORIZONTAL);
 
                 break;
             case R.id.flip_vertical:
-                ImageProcessor.doFlip(MainActivity.currentBitmap, (MainActivity) getActivity(), FlipTask.FLIP_VERTICAL);
+                ImageProcessor.doFlip(MainActivity.originalBitmap, (MainActivity) getActivity(), FlipTask.FLIP_VERTICAL);
 
                 break;
         }

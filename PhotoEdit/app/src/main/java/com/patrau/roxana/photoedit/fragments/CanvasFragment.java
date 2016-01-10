@@ -47,6 +47,7 @@ public class CanvasFragment extends Fragment {
 
     public void setCanvasImage(Bitmap bitmap) {
         if (imageView != null) {
+            MainActivity.currentCanvasBitmap = bitmap;
             canvasContainer.setBackgroundResource(0);
             imageView.setImageBitmap(bitmap);
             addImageText.setVisibility(View.GONE);
@@ -56,8 +57,8 @@ public class CanvasFragment extends Fragment {
 
     public void setOriginalFilePath(String originalFilePath) {
         this.originalFilePath = originalFilePath;
-        MainActivity.currentBitmap = BitmapFactory.decodeFile(originalFilePath);
-        setCanvasImage(MainActivity.currentBitmap);
+        MainActivity.originalBitmap = BitmapFactory.decodeFile(originalFilePath);
+        setCanvasImage(MainActivity.originalBitmap);
     }
 
     public void hideControllersFrameContainer() {

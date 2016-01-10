@@ -15,4 +15,14 @@
     <string name="horizontal">Horizontal</string>
     <string name="vertical">Vertical</string>
     <string name="boost_color">Boost color</string>
+    <string name="save_dialog_title">Save Canvas</string>
+    <string name="save_dialog_message">Save the current Canvas to your Collection?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel_dialog_title">Cancel</string>
+    <string name="cancel_dialog_message">Cancel all the current Canvas changes?</string>
+    <string name="canvas_saved_successfully">The Canvas was successfully saved to your Collection.</string>
+    <string name="canvas_not_saved_successfully">An error occurred while trying to save the Canvas.</string>
+    <string name="please_wait">Please wait&#8230;</string>
+    <string name="no_items_to_display">No items to display.</string>
 </resources>

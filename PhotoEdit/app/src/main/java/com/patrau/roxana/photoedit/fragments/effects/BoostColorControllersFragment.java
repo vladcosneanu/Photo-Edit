@@ -49,7 +49,7 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         MainActivity activity = (MainActivity) getActivity();
-        ImageProcessor.doBoostColor(MainActivity.currentBitmap, activity, redValue, greenValue, blueValue);
+        ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 
     @Override
@@ -77,6 +77,6 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
                 break;
         }
 
-        ImageProcessor.doBoostColor(MainActivity.currentBitmap, activity, redValue, greenValue, blueValue);
+        ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 }

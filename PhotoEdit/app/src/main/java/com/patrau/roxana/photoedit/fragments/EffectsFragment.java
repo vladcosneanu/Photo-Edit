@@ -42,7 +42,7 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.invert_container:
-                ImageProcessor.doInvert(MainActivity.currentBitmap, (MainActivity) getActivity());
+                ImageProcessor.doInvert(MainActivity.originalBitmap, (MainActivity) getActivity());
 
                 break;
             case R.id.flip_container:

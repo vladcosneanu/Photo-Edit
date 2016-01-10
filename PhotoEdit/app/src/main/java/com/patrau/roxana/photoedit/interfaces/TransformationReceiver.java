@@ -1,4 +1,4 @@
-package com.patrau.roxana.photoedit;
+package com.patrau.roxana.photoedit.interfaces;
 
 import android.graphics.Bitmap;
 

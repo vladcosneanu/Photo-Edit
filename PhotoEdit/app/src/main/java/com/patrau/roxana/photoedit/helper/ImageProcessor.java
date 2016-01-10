@@ -2,7 +2,7 @@ package com.patrau.roxana.photoedit.helper;
 
 import android.graphics.Bitmap;
 
-import com.patrau.roxana.photoedit.TransformationReceiver;
+import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 import com.patrau.roxana.photoedit.transformations.BoostColorTask;
 import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
