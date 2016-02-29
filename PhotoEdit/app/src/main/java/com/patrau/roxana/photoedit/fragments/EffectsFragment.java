@@ -17,6 +17,7 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
     private View invertCoontainer;
     private View flipCoontainer;
     private View boostColorCoontainer;
+    private View engraveCoontainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,6 +31,8 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
         flipCoontainer.setOnClickListener(this);
         boostColorCoontainer = mView.findViewById(R.id.boost_color_container);
         boostColorCoontainer.setOnClickListener(this);
+        engraveCoontainer = mView.findViewById(R.id.rotate_container);
+        engraveCoontainer.setOnClickListener(this);
 
         return mView;
     }
@@ -51,6 +54,10 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.boost_color_container:
                 ((MainActivity) getActivity()).attachBoostColorController();
+
+                break;
+            case R.id.rotate_container:
+                ((MainActivity) getActivity()).attachRotateController();
 
                 break;
         }

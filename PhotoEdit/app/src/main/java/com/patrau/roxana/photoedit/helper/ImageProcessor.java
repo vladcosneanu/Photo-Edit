@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 
 import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 import com.patrau.roxana.photoedit.transformations.BoostColorTask;
+import com.patrau.roxana.photoedit.transformations.RotateTask;
 import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 import com.patrau.roxana.photoedit.transformations.InvertTask;
@@ -29,5 +30,10 @@ public class ImageProcessor {
         BoostColorTask boostColorTask = new BoostColorTask(inputBitmap, transformationReceiver,
                 (float) redPercent / 100, (float) greenPercent / 100, (float) bluePercent / 100);
         boostColorTask.execute(new String[]{});
+    }
+
+    public static void doRotate(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float degree) {
+        RotateTask rotateTask = new RotateTask(inputBitmap, transformationReceiver, degree);
+        rotateTask.execute(new String[]{});
     }
 }

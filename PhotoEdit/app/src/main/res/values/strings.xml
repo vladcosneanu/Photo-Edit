@@ -25,4 +25,5 @@
     <string name="canvas_not_saved_successfully">An error occurred while trying to save the Canvas.</string>
     <string name="please_wait">Please wait&#8230;</string>
     <string name="no_items_to_display">No items to display.</string>
+    <string name="rotate">Rotate</string>
 </resources>

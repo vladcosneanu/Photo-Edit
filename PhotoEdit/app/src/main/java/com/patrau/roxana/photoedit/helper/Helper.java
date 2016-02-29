@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Helper {
 
-    private static int MAX_THUMB_SIZE = 175;
+    private static int MAX_THUMB_SIZE = 500;
 
     public static File createImageFile() throws IOException {
         // Create an image file name

@@ -129,6 +129,32 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/rotate_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/effect_button"
+                android:clickable="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/ic_rotate_right_black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/rotate"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </HorizontalScrollView>

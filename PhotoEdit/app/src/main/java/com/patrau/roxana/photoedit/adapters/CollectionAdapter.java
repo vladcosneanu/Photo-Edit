@@ -48,15 +48,11 @@ public class CollectionAdapter extends BaseAdapter {
             ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.thumbIcon = (ImageView) rowView.findViewById(R.id.thumb_image);
-            viewHolder.thumbText = (TextView) rowView.findViewById(R.id.thumb_text);
 
             rowView.setTag(viewHolder);
         }
 
         ViewHolder viewHolder = (ViewHolder) rowView.getTag();
-
-        String filename = thumbnail.substring(thumbnail.lastIndexOf("/") + 1);
-        viewHolder.thumbText.setText(filename);
 
         File thumbnailImage = new File(Helper.getThumbsStorageDirectory(), thumbnail);
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -68,6 +64,5 @@ public class CollectionAdapter extends BaseAdapter {
 
     static class ViewHolder {
         private ImageView thumbIcon;
-        private TextView thumbText;
     }
 }
