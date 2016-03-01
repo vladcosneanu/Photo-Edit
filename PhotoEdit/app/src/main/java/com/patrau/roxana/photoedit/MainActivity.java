@@ -43,10 +43,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static Bitmap originalBitmap;
     public static Bitmap currentCanvasBitmap;
 
+    public static boolean inCanvasEditMode = false;
+
     private CoordinatorLayout coordinatorLayout;
     private CustomViewPager mPager;
     private ScreenSlidePagerAdapter mPagerAdapter;
     private FloatingActionButton plusButton;
+    private FloatingActionButton editButton;
     private FloatingActionButton photoButton;
     private FloatingActionButton openButton;
     private ProgressDialog progressDialog;
@@ -57,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean displayDoneMenuItem = false;
     private MenuItem cancelMenuItem;
     private boolean displayCancelMenuItem = false;
-
-    private boolean inCanvasEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressDialog.setMessage(getString(R.string.please_wait));
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.setCancelable(true);
-
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) findViewById(R.id.pager);
@@ -99,7 +99,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     case 1:
                         setTitle(getString(R.string.canvas));
-                        plusButton.show();
+                        if (!inCanvasEditMode) {
+                            plusButton.show();
+                        }
+
+                        String currentFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
+                        if (currentFilePath != null) {
+                            editButton.show();
+                        } else {
+                            editButton.hide();
+                        }
+
                         break;
                 }
             }
@@ -112,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
         plusButton = (FloatingActionButton) findViewById(R.id.plus_button);
         plusButton.setOnClickListener(this);
+        editButton = (FloatingActionButton) findViewById(R.id.edit_button);
+        editButton.setOnClickListener(this);
         photoButton = (FloatingActionButton) findViewById(R.id.photo_button);
         photoButton.setOnClickListener(this);
         openButton = (FloatingActionButton) findViewById(R.id.open_button);
@@ -219,10 +231,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ((CanvasFragment) mPagerAdapter.getItem(1)).hideControllersFrameContainer();
 
         plusButton.show();
+        editButton.show();
     }
 
     public void hideAllFloatingActionButtons() {
         plusButton.hide();
+        editButton.hide();
         photoButton.hide();
         openButton.hide();
     }
@@ -233,13 +247,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.plus_button:
                 if (canvasButtonsDisplayed) {
                     photoButton.hide();
-                    openButton.hide();
+                    openButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                        @Override
+                        public void onHidden(FloatingActionButton fab) {
+                            String currentFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
+                            if (currentFilePath != null) {
+                                editButton.show();
+                                editButton.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    });
                     canvasButtonsDisplayed = false;
                 } else {
-                    openButton.show();
-                    photoButton.show();
+                    editButton.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                        @Override
+                        public void onHidden(FloatingActionButton fab) {
+                            editButton.setVisibility(View.GONE);
+                            openButton.show();
+                            photoButton.show();
+                        }
+                    });
                     canvasButtonsDisplayed = true;
                 }
+                break;
+            case R.id.edit_button:
+                String currentFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
+                if (currentFilePath != null) {
+                    prepareForCanvasEdit(currentFilePath);
+                }
+
                 break;
             case R.id.photo_button:
                 photoButton.hide();
@@ -292,8 +328,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void prepareForCanvasEdit(String filePath) {
+    public void prepareForCanvasEdit(String filePath) {
         inCanvasEditMode = true;
+
+        if (mPager.getCurrentItem() != 1) {
+            mPager.setCurrentItem(1, true);
+        }
 
         hideAllFloatingActionButtons();
         setViewPagerEnabled(false);
@@ -302,6 +342,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CanvasFragment canvasFragment = (CanvasFragment) mPagerAdapter.getItem(1);
         canvasFragment.setOriginalFilePath(filePath);
         canvasFragment.attachEffectsFragment();
+    }
+
+    public void fillCanvas(String filePath) {
+        inCanvasEditMode = false;
+
+        if (mPager.getCurrentItem() != 1) {
+            mPager.setCurrentItem(1, true);
+        }
+
+        CanvasFragment canvasFragment = (CanvasFragment) mPagerAdapter.getItem(1);
+        canvasFragment.setOriginalFilePath(filePath);
+        finishCanvasEdit();
     }
 
     public void onTransformationProgress(float progress) {
@@ -322,7 +374,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    public void onCanvasSaveSuccess() {
+    public void onCanvasSaveSuccess(final String canvasFileName) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -332,6 +384,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 CollectionFragment collectionFragment = (CollectionFragment) mPagerAdapter.getItem(0);
                 collectionFragment.refreshCollection();
+
+                File canvasFile = new File(Helper.getCanvasStorageDirectory(), canvasFileName);
+                ((CanvasFragment) mPagerAdapter.getItem(1)).setOriginalFilePath(canvasFile.getPath());
             }
         });
     }
@@ -361,9 +416,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                progressDialog.show();
-                SaveCanvasTask saveCanvasTask = new SaveCanvasTask(currentCanvasBitmap, MainActivity.this);
-                saveCanvasTask.execute(new String[]{});
+                String originalFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
+                if (originalFilePath.contains(Helper.getCanvasStorageDirectory())) {
+                    displayOverwriteDialog();
+                } else {
+                    progressDialog.show();
+                    SaveCanvasTask saveCanvasTask = new SaveCanvasTask(currentCanvasBitmap, MainActivity.this, null);
+                    saveCanvasTask.execute(new String[]{});
+                }
             }
         });
         builder.setNegativeButton(R.string.no, null);
@@ -386,6 +446,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.show();
     }
 
+    private void displayOverwriteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.overwrite_dialog_title);
+        builder.setMessage(R.string.overwrite_dialog_message);
+        builder.setPositiveButton(R.string.overwrite, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.show();
+                String originalFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
+                String currentCanvasFilename = originalFilePath.substring(originalFilePath.lastIndexOf("/") + 1);
+                SaveCanvasTask saveCanvasTask = new SaveCanvasTask(currentCanvasBitmap, MainActivity.this, currentCanvasFilename);
+                saveCanvasTask.execute(new String[]{});
+            }
+        });
+        builder.setNegativeButton(R.string.new_item, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                progressDialog.show();
+                SaveCanvasTask saveCanvasTask = new SaveCanvasTask(currentCanvasBitmap, MainActivity.this, null);
+                saveCanvasTask.execute(new String[]{});
+            }
+        });
+        builder.setNeutralButton(R.string.cancel, null);
+        builder.show();
+    }
+
     public void attachGrayScaleController() {
         CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
         canvasFragment.attachGrayScaleController();
@@ -404,5 +490,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void attachRotateController() {
         CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
         canvasFragment.attachRotateController();
+    }
+
+    public void displayProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+    }
+
+    public void dismissProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 }

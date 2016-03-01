@@ -6,5 +6,5 @@ public interface CanvasSaver {
 
     public void onCanvasSaveFailed();
 
-    public void onCanvasSaveSuccess();
+    public void onCanvasSaveSuccess(String canvasFileName);
 }

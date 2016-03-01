@@ -19,6 +19,8 @@
     <string name="save_dialog_message">Save the current Canvas to your Collection?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="overwrite">Overwrite</string>
+    <string name="new_item">New Item</string>
     <string name="cancel_dialog_title">Cancel</string>
     <string name="cancel_dialog_message">Cancel all the current Canvas changes?</string>
     <string name="canvas_saved_successfully">The Canvas was successfully saved to your Collection.</string>
@@ -26,4 +28,7 @@
     <string name="please_wait">Please wait&#8230;</string>
     <string name="no_items_to_display">No items to display.</string>
     <string name="rotate">Rotate</string>
+    <string name="overwrite_dialog_title">Overwrite Canvas?</string>
+    <string name="overwrite_dialog_message">This Canvas was edited.\nOverwrite the old Canvas or create a new one?</string>
+
 </resources>

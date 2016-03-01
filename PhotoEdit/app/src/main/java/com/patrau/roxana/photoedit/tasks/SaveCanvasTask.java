@@ -10,15 +10,19 @@ public class SaveCanvasTask extends AsyncTask<String, Float, Boolean> {
 
     private Bitmap bitmap;
     private CanvasSaver canvasSaver;
+    private String canvasFileName;
 
-    public SaveCanvasTask(Bitmap bitmap, CanvasSaver canvasSaver) {
+    public SaveCanvasTask(Bitmap bitmap, CanvasSaver canvasSaver, String canvasFilename) {
         this.bitmap = bitmap;
         this.canvasSaver = canvasSaver;
+        this.canvasFileName = canvasFilename;
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
-        String canvasFileName = Helper.getNewCanvasFileName();
+        if (canvasFileName == null) {
+            canvasFileName = Helper.getNewCanvasFileName();
+        }
 
         boolean canvasSaved = Helper.saveBitmapToCollection(bitmap, canvasFileName);
         boolean thumbSaved = Helper.saveThumbBitmapToCollection(bitmap, canvasFileName);
@@ -36,7 +40,7 @@ public class SaveCanvasTask extends AsyncTask<String, Float, Boolean> {
         super.onPostExecute(canvasSaved);
 
         if (canvasSaved) {
-            canvasSaver.onCanvasSaveSuccess();
+            canvasSaver.onCanvasSaveSuccess(canvasFileName);
         } else {
             canvasSaver.onCanvasSaveFailed();
         }

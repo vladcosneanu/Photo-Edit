@@ -52,14 +52,35 @@ public class CanvasFragment extends Fragment {
             canvasContainer.setBackgroundResource(0);
             imageView.setImageBitmap(bitmap);
             addImageText.setVisibility(View.GONE);
-            controllersFrameContainer.setVisibility(View.VISIBLE);
+
+            if (MainActivity.inCanvasEditMode) {
+                controllersFrameContainer.setVisibility(View.VISIBLE);
+            } else {
+                controllersFrameContainer.setVisibility(View.GONE);
+            }
         }
     }
 
     public void setOriginalFilePath(String originalFilePath) {
         this.originalFilePath = originalFilePath;
-        MainActivity.originalBitmap = BitmapFactory.decodeFile(originalFilePath);
-        setCanvasImage(MainActivity.originalBitmap);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                MainActivity.originalBitmap = BitmapFactory.decodeFile(CanvasFragment.this.originalFilePath);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        setCanvasImage(MainActivity.originalBitmap);
+                        ((MainActivity) getActivity()).dismissProgressDialog();
+                    }
+                });
+            }
+        });
+        thread.start();
+    }
+
+    public String getOriginalFilePath() {
+        return originalFilePath;
     }
 
     public void hideControllersFrameContainer() {
