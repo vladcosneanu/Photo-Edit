@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import com.patrau.roxana.photoedit.helper.Helper;
 import com.patrau.roxana.photoedit.interfaces.CanvasSaver;
 
+/**
+ * Task used for saving a canvas and its thumbnail in the background
+ */
 public class SaveCanvasTask extends AsyncTask<String, Float, Boolean> {
 
     private Bitmap bitmap;

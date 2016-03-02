@@ -9,6 +9,9 @@ import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 import com.patrau.roxana.photoedit.transformations.InvertTask;
 
+/**
+ * This class is the main access point for all image effects
+ */
 public class ImageProcessor {
 
     public static void doGreyscale(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float red, float green, float blue) {

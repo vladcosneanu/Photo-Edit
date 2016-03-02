@@ -17,6 +17,9 @@ public class Helper {
 
     private static int MAX_THUMB_SIZE = 300;
 
+    /**
+     * Create a file that will be used as destination file when taking a new picture via Intent
+     */
     public static File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -28,16 +31,25 @@ public class Helper {
         return image;
     }
 
+    /**
+     * Save a bitmap to the main storage directory (collection directory)
+     */
     public static boolean saveBitmapToCollection(Bitmap bitmap, String fileName) {
         return saveBitmapToLocation(bitmap, getCanvasStorageDirectory(), fileName);
     }
 
+    /**
+     * Save a bitmap to the thumbs storage directory
+     */
     public static boolean saveThumbBitmapToCollection(Bitmap bitmap, String fileName) {
         Bitmap thumbBitmap = scaleDown(bitmap, MAX_THUMB_SIZE, true);
 
         return saveBitmapToLocation(thumbBitmap, getThumbsStorageDirectory(), fileName);
     }
 
+    /**
+     * Utility method for saving a bitmap to a specific location
+     */
     private static boolean saveBitmapToLocation(Bitmap bitmap, String directory, String fileName) {
         File storageDirectory = new File(directory);
         if (!storageDirectory.exists()) {
@@ -67,6 +79,9 @@ public class Helper {
         return fileSaved;
     }
 
+    /**
+     * Utility method for scaling down a bitmap
+     */
     public static Bitmap scaleDown(Bitmap bitmap, float maxImageSize,
                                    boolean filter) {
         float ratio = Math.min(
@@ -81,6 +96,9 @@ public class Helper {
         return newBitmap;
     }
 
+    /**
+     * Utility method for creating a new canvas file name
+     */
     public static String getNewCanvasFileName() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MM dd, H:mm:ss");
         String fileName = simpleDateFormat.format(Calendar.getInstance().getTime());
@@ -89,14 +107,23 @@ public class Helper {
         return fileName;
     }
 
+    /**
+     * Retrieve the canvas storage directory
+     */
     public static String getCanvasStorageDirectory() {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/PhotoEdit";
     }
 
+    /**
+     * Retrieve the thumbs storage directory
+     */
     public static String getThumbsStorageDirectory() {
         return Environment.getExternalStorageDirectory().getAbsolutePath() + "/PhotoEdit/Thumbs";
     }
 
+    /**
+     * Retrieve all the thumbnail items for the Collection fragment
+     */
     public static List<String> getCollection() {
         List<String> collection = new ArrayList<String>();
         File thumbsStorageDirectory = new File(getThumbsStorageDirectory());

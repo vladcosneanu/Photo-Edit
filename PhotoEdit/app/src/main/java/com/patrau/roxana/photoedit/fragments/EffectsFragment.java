@@ -22,7 +22,10 @@ public class EffectsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_effects, container, false);
+
+        // initialize the view objects
         grayscaleCoontainer = mView.findViewById(R.id.grayscale_container);
         grayscaleCoontainer.setOnClickListener(this);
         invertCoontainer = mView.findViewById(R.id.invert_container);

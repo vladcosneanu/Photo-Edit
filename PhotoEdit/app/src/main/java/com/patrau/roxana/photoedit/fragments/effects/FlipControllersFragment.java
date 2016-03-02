@@ -23,8 +23,10 @@ public class FlipControllersFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_flip, container, false);
 
+        // initialize the view objects
         flipHorizontal = mView.findViewById(R.id.flip_horizontal);
         flipHorizontal.setOnClickListener(this);
         flipVertical = mView.findViewById(R.id.flip_vertical);

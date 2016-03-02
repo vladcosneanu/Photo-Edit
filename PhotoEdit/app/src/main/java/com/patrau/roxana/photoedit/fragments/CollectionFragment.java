@@ -29,8 +29,10 @@ public class CollectionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_collection, container, false);
 
+        // initialize the view objects
         collectionGridView = (GridView) mView.findViewById(R.id.collection_gridview);
         collectionGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,12 +60,14 @@ public class CollectionFragment extends Fragment {
     public void refreshCollection() {
         List<String> collection = Helper.getCollection();
         if (collection.size() > 0) {
+            // the collection has items
             noItemsText.setVisibility(View.GONE);
             collectionGridView.setVisibility(View.VISIBLE);
 
             collectionAdapter = new CollectionAdapter(getActivity(), collection);
             collectionGridView.setAdapter(collectionAdapter);
         } else {
+            // the collection has no items
             noItemsText.setVisibility(View.VISIBLE);
             collectionGridView.setVisibility(View.GONE);
         }

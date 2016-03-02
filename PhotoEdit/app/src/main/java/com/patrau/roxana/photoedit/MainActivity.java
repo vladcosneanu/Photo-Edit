@@ -37,6 +37,7 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TransformationReceiver, CanvasSaver {
 
+    // Intent request codes
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int SELECT_PHOTO = 2;
 
@@ -64,8 +65,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // set the layout for the activity
         setContentView(R.layout.activity_main);
 
+        // initialize the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         String currentFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
                         if (currentFilePath != null) {
+                            // the Canvas fragment has an image displayed, the edit button should be visible
                             editButton.show();
                         } else {
                             editButton.hide();
@@ -119,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // initialize the floating action buttons
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
         plusButton = (FloatingActionButton) findViewById(R.id.plus_button);
         plusButton.setOnClickListener(this);
@@ -129,11 +134,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         openButton = (FloatingActionButton) findViewById(R.id.open_button);
         openButton.setOnClickListener(this);
 
+        // make sure that canvas items can be saved
         if (!Environment.getExternalStorageDirectory().canWrite()) {
             displayStoragePermissionSnackBar();
         }
     }
 
+    /**
+     * Create and start the "Take Picture" intent
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -154,11 +163,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Display a message that asks the user to enable Storage Permission for the application
+     */
     private void displayStoragePermissionSnackBar() {
         Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.provide_storage_permission, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.settings, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // start an intent that redirects the user to the application's settings
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                                 Uri.fromParts("package", getPackageName(), null));
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -182,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu - this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         doneMenuItem = menu.getItem(0);
@@ -223,6 +236,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * The Canvas is no longer in edit mode - update the UI and all necessary flags.
+     */
     private void finishCanvasEdit() {
         inCanvasEditMode = false;
 
@@ -252,6 +268,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         public void onHidden(FloatingActionButton fab) {
                             String currentFilePath = ((CanvasFragment) mPagerAdapter.getItem(1)).getOriginalFilePath();
                             if (currentFilePath != null) {
+                                // the Canvas fragment has an image displayed, the edit button should be visible
                                 editButton.show();
                                 editButton.setVisibility(View.VISIBLE);
                             }
@@ -295,6 +312,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openButton.hide();
                 canvasButtonsDisplayed = false;
 
+                // start an image picker intent
+                // this will allow selecting an image from the Android device
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
@@ -311,8 +330,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            // returned from "Take photo" intent
             prepareForCanvasEdit(currentPhotoFile.getAbsolutePath());
         } else if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            // returned from "Select photo" intent
+            // extract the selected image's path and start editing it
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -328,6 +350,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Canvas UI should be updated for editing mode.
+     * Update all the views and necessary flags.
+     */
     public void prepareForCanvasEdit(String filePath) {
         inCanvasEditMode = true;
 
@@ -344,6 +370,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         canvasFragment.attachEffectsFragment();
     }
 
+    /**
+     * This method fills the Canvas fragment with the selected item from the Collection fragment.
+     */
     public void fillCanvas(String filePath) {
         inCanvasEditMode = false;
 
@@ -357,10 +386,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onTransformationProgress(float progress) {
-        Log.d("Vlad", "progress: " + progress);
+        Log.d("MainActivity", "progress: " + progress);
     }
 
     public void onTransformationComplete(Bitmap bitmap) {
+        // set the transformed image as the canvas image
         ((CanvasFragment) mPagerAdapter.getItem(1)).setCanvasImage(bitmap);
     }
 
@@ -382,9 +412,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, R.string.canvas_saved_successfully, Toast.LENGTH_SHORT).show();
                 finishCanvasEdit();
 
+                // refresh the Collection in order to add the saved canvas
                 CollectionFragment collectionFragment = (CollectionFragment) mPagerAdapter.getItem(0);
                 collectionFragment.refreshCollection();
 
+                // update the canvas's file path to the newly created file
                 File canvasFile = new File(Helper.getCanvasStorageDirectory(), canvasFileName);
                 ((CanvasFragment) mPagerAdapter.getItem(1)).setOriginalFilePath(canvasFile.getPath());
             }

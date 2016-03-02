@@ -23,21 +23,25 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
     private int redValue = 0;
     private int greenValue = 0;
     private int blueValue = 0;
-    ;
+
+    private static final int SEEK_BAR_OFFSET = 75;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_boost_color, container, false);
 
+        // initialize the view objects
+        // all seek-bars have an offset of 75 in order to start at the middle
         redSeekBar = (SeekBar) mView.findViewById(R.id.boost_color_red_seekbar);
-        redSeekBar.setProgress(redValue + 75);
+        redSeekBar.setProgress(redValue + SEEK_BAR_OFFSET);
         redSeekBar.setOnSeekBarChangeListener(this);
         greenSeekBar = (SeekBar) mView.findViewById(R.id.boost_color_green_seekbar);
-        greenSeekBar.setProgress(greenValue + 75);
+        greenSeekBar.setProgress(greenValue + SEEK_BAR_OFFSET);
         greenSeekBar.setOnSeekBarChangeListener(this);
         blueSeekBar = (SeekBar) mView.findViewById(R.id.boost_color_blue_seekbar);
-        blueSeekBar.setProgress(blueValue + 75);
+        blueSeekBar.setProgress(blueValue + SEEK_BAR_OFFSET);
         blueSeekBar.setOnSeekBarChangeListener(this);
 
         backButton = (ImageButton) mView.findViewById(R.id.back_button);
@@ -48,6 +52,7 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // fragment attached, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
         ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
@@ -63,17 +68,18 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
         switch (seekBar.getId()) {
             case R.id.boost_color_red_seekbar:
-                redValue = seekBar.getProgress() - 75;
+                redValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
                 break;
             case R.id.boost_color_green_seekbar:
-                greenValue = seekBar.getProgress() - 75;
+                greenValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
                 break;
             case R.id.boost_color_blue_seekbar:
-                blueValue = seekBar.getProgress() - 75;
+                blueValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
                 break;
         }
 

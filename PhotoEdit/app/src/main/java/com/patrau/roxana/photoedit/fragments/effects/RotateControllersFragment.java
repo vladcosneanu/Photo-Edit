@@ -22,8 +22,10 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_rotate, container, false);
 
+        // initialize the view objects
         degreeSeekbar = (SeekBar) mView.findViewById(R.id.degree_seekbar);
         degreeSeekbar.setProgress(degreeValue);
         degreeSeekbar.setOnSeekBarChangeListener(this);
@@ -45,6 +47,7 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
         switch (seekBar.getId()) {

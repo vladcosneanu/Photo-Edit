@@ -23,23 +23,26 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
 
     private float redValue = GrayScaleTask.DEFAULT_RED;
     private float greenValue = GrayScaleTask.DEFAULT_GREEN;
-    ;
     private float blueValue = GrayScaleTask.DEFAULT_BLUE;
-    ;
+
+    private static final int SEEK_BAR_OFFSET_MULTIPLIER = 1000;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_grayscale, container, false);
 
+        // initialize the view objects
+        // all seek-bars have an offset multiplier of 1000
         redSeekBar = (SeekBar) mView.findViewById(R.id.grayscale_red_seekbar);
-        redSeekBar.setProgress((int) (redValue * 1000));
+        redSeekBar.setProgress((int) (redValue * SEEK_BAR_OFFSET_MULTIPLIER));
         redSeekBar.setOnSeekBarChangeListener(this);
         greenSeekBar = (SeekBar) mView.findViewById(R.id.grayscale_green_seekbar);
-        greenSeekBar.setProgress((int) (greenValue * 1000));
+        greenSeekBar.setProgress((int) (greenValue * SEEK_BAR_OFFSET_MULTIPLIER));
         greenSeekBar.setOnSeekBarChangeListener(this);
         blueSeekBar = (SeekBar) mView.findViewById(R.id.grayscale_blue_seekbar);
-        blueSeekBar.setProgress((int) (blueValue * 1000));
+        blueSeekBar.setProgress((int) (blueValue * SEEK_BAR_OFFSET_MULTIPLIER));
         blueSeekBar.setOnSeekBarChangeListener(this);
 
         backButton = (ImageButton) mView.findViewById(R.id.back_button);
@@ -50,6 +53,7 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        // fragment attached, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
         ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
@@ -65,17 +69,18 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
         switch (seekBar.getId()) {
             case R.id.grayscale_red_seekbar:
-                redValue = (float) seekBar.getProgress() / 1000;
+                redValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
                 break;
             case R.id.grayscale_green_seekbar:
-                greenValue = (float) seekBar.getProgress() / 1000;
+                greenValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
                 break;
             case R.id.grayscale_blue_seekbar:
-                blueValue = (float) seekBar.getProgress() / 1000;
+                blueValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
                 break;
         }
 

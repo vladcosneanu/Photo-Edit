@@ -30,9 +30,11 @@ public class CanvasFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_canvas, container, false);
 
+        // initialize the view objects
         imageView = (ImageView) mView.findViewById(R.id.canvas_image);
         addImageText = (TextView) mView.findViewById(R.id.add_image_text);
         canvasContainer = mView.findViewById(R.id.canvas_container);
@@ -63,10 +65,12 @@ public class CanvasFragment extends Fragment {
 
     public void setOriginalFilePath(String originalFilePath) {
         this.originalFilePath = originalFilePath;
+        // start a new thread in order to improve user experience while decoding bitmap file
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 MainActivity.originalBitmap = BitmapFactory.decodeFile(CanvasFragment.this.originalFilePath);
+                // synchronize with the UI thread
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
