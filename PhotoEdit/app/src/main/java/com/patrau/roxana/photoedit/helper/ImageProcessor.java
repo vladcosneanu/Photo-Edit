@@ -8,6 +8,7 @@ import com.patrau.roxana.photoedit.transformations.RotateTask;
 import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 import com.patrau.roxana.photoedit.transformations.InvertTask;
+import com.patrau.roxana.photoedit.transformations.SepiaTask;
 
 /**
  * This class is the main access point for all image effects
@@ -38,5 +39,10 @@ public class ImageProcessor {
     public static void doRotate(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float degree) {
         RotateTask rotateTask = new RotateTask(inputBitmap, transformationReceiver, degree);
         rotateTask.execute(new String[]{});
+    }
+
+    public static void doSepia(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float redDepth, float greenDepth, float blueDepth) {
+        SepiaTask sepiaTask = new SepiaTask(inputBitmap, transformationReceiver, redDepth, greenDepth, blueDepth);
+        sepiaTask.execute(new String[]{});
     }
 }

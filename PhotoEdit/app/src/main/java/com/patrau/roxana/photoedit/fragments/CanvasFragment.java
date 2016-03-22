@@ -17,6 +17,7 @@ import com.patrau.roxana.photoedit.fragments.effects.BoostColorControllersFragme
 import com.patrau.roxana.photoedit.fragments.effects.FlipControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.GrayScaleControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.RotateControllersFragment;
+import com.patrau.roxana.photoedit.fragments.effects.SepiaControllersFragment;
 
 public class CanvasFragment extends Fragment {
 
@@ -122,5 +123,10 @@ public class CanvasFragment extends Fragment {
     public void attachRotateController() {
         RotateControllersFragment rotateControllersFragment = new RotateControllersFragment();
         attachControllersFragment(rotateControllersFragment);
+    }
+
+    public void attachSepiaController() {
+        SepiaControllersFragment sepiaControllersFragment = new SepiaControllersFragment();
+        attachControllersFragment(sepiaControllersFragment);
     }
 }

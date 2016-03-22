@@ -524,6 +524,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         canvasFragment.attachRotateController();
     }
 
+    public void attachSepiaController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachSepiaController();
+    }
+
     public void displayProgressDialog() {
         if (progressDialog != null) {
             progressDialog.show();
