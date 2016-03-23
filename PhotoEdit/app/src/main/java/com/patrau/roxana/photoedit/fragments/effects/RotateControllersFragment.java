@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
@@ -17,7 +18,10 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
     private View mView;
     private ImageButton backButton;
     private SeekBar degreeSeekbar;
-    private int degreeValue = 180;
+    private TextView angleTextView;
+
+    private static final int SEEK_BAR_OFFSET = 180;
+    private int degreeValue = SEEK_BAR_OFFSET;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -29,6 +33,12 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
         degreeSeekbar = (SeekBar) mView.findViewById(R.id.degree_seekbar);
         degreeSeekbar.setProgress(degreeValue);
         degreeSeekbar.setOnSeekBarChangeListener(this);
+
+        // initialize the angle value text views
+        angleTextView = (TextView) mView.findViewById(R.id.angle_textview);
+
+        // set the initial values for the RGB text views
+        angleTextView.setText(String.valueOf(degreeValue - SEEK_BAR_OFFSET));
 
         backButton = (ImageButton) mView.findViewById(R.id.back_button);
         backButton.setOnClickListener((MainActivity) getActivity());
@@ -52,7 +62,8 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
 
         switch (seekBar.getId()) {
             case R.id.degree_seekbar:
-                degreeValue = seekBar.getProgress() - 180;
+                degreeValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
+                angleTextView.setText(String.valueOf(degreeValue));
                 break;
         }
 

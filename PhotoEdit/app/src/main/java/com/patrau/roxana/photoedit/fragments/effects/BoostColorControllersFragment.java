@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
@@ -19,6 +20,9 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
     private SeekBar redSeekBar;
     private SeekBar greenSeekBar;
     private SeekBar blueSeekBar;
+    private TextView redTextView;
+    private TextView greenTextView;
+    private TextView blueTextView;
 
     private int redValue = 0;
     private int greenValue = 0;
@@ -32,7 +36,11 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_boost_color, container, false);
 
-        // initialize the view objects
+        // initialize the RGB values text views
+        redTextView = (TextView) mView.findViewById(R.id.red_textview);
+        greenTextView = (TextView) mView.findViewById(R.id.green_textview);
+        blueTextView = (TextView) mView.findViewById(R.id.blue_textview);
+
         // all seek-bars have an offset of 75 in order to start at the middle
         redSeekBar = (SeekBar) mView.findViewById(R.id.boost_color_red_seekbar);
         redSeekBar.setProgress(redValue + SEEK_BAR_OFFSET);
@@ -55,6 +63,11 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         // fragment attached, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
         ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
+
+        // set the initial values for the RGB text views
+        redTextView.setText(String.valueOf(redValue));
+        greenTextView.setText(String.valueOf(greenValue));
+        blueTextView.setText(String.valueOf(blueValue));
     }
 
     @Override
@@ -74,12 +87,15 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         switch (seekBar.getId()) {
             case R.id.boost_color_red_seekbar:
                 redValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
+                redTextView.setText(String.valueOf(redValue));
                 break;
             case R.id.boost_color_green_seekbar:
                 greenValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
+                greenTextView.setText(String.valueOf(greenValue));
                 break;
             case R.id.boost_color_blue_seekbar:
                 blueValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
+                blueTextView.setText(String.valueOf(blueValue));
                 break;
         }
 

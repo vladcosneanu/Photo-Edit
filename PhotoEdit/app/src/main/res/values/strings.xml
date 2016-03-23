@@ -31,5 +31,16 @@
     <string name="overwrite_dialog_title">Overwrite Canvas?</string>
     <string name="overwrite_dialog_message">This Canvas was edited.\nOverwrite the old Canvas or create a new one?</string>
     <string name="sepia">Sepia</string>
+    <string name="red">"Red: "</string>
+    <string name="green">"Green: "</string>
+    <string name="blue">"Blue: "</string>
+    <string name="angle">"Angle: "</string>
+    <string name="select_items">Select items</string>
+    <string name="one_item_selected">One item selected</string>
+    <string name="x_items_selected">%1$d items selected</string>
+    <string name="share">Share</string>
+    <string name="delete">Delete</string>
+    <string name="delete_dialog_title">Delete</string>
+    <string name="delete_dialog_message">Delete the selected canvases?</string>
 
 </resources>

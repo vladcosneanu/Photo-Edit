@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
@@ -20,6 +21,9 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
     private SeekBar redSeekBar;
     private SeekBar greenSeekBar;
     private SeekBar blueSeekBar;
+    private TextView redTextView;
+    private TextView greenTextView;
+    private TextView blueTextView;
 
     private float redValue = -0.05f;
     private float greenValue = 0.0f;
@@ -34,7 +38,11 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         // inflate the fragment's layout
         mView = (ViewGroup) inflater.inflate(R.layout.fragment_sepia, container, false);
 
-        // initialize the view objects
+        // initialize the RGB values text views
+        redTextView = (TextView) mView.findViewById(R.id.red_textview);
+        greenTextView = (TextView) mView.findViewById(R.id.green_textview);
+        blueTextView = (TextView) mView.findViewById(R.id.blue_textview);
+
         // all seek-bars have an offset multiplier of 100
         redSeekBar = (SeekBar) mView.findViewById(R.id.sepia_red_seekbar);
         redSeekBar.setProgress((int) (redValue * SEEK_BAR_OFFSET_MULTIPLIER) + SEEK_BAR_OFFSET);
@@ -57,6 +65,11 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         // fragment attached, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
         ImageProcessor.doSepia(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
+
+        // set the initial values for the RGB text views
+        redTextView.setText(String.valueOf(redValue));
+        greenTextView.setText(String.valueOf(greenValue));
+        blueTextView.setText(String.valueOf(blueValue));
     }
 
     @Override
@@ -76,12 +89,15 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         switch (seekBar.getId()) {
             case R.id.sepia_red_seekbar:
                 redValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
+                redTextView.setText(String.valueOf(redValue));
                 break;
             case R.id.sepia_green_seekbar:
                 greenValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
+                greenTextView.setText(String.valueOf(greenValue));
                 break;
             case R.id.sepia_blue_seekbar:
                 blueValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
+                blueTextView.setText(String.valueOf(blueValue));
                 break;
         }
 
