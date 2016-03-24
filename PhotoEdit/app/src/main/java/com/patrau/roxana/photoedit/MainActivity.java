@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             editButton.hide();
                         }
 
+                        CollectionFragment collectionFragment = (CollectionFragment) mPagerAdapter.getItem(0);
+                        collectionFragment.closeMultiChoiceMode();
+
                         break;
                 }
             }

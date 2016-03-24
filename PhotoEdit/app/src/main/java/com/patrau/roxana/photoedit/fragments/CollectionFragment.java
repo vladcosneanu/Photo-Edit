@@ -2,6 +2,7 @@ package com.patrau.roxana.photoedit.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
@@ -32,6 +33,7 @@ public class CollectionFragment extends Fragment {
     private TextView noItemsText;
     private GridView collectionGridView;
     private CollectionAdapter collectionAdapter;
+    private ActionMode actionMode = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +68,15 @@ public class CollectionFragment extends Fragment {
         refreshCollection();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (actionMode != null) {
+            actionMode.finish();
+        }
+    }
+
     public void refreshCollection() {
         List<String> collection = Helper.getCollection();
         if (collection.size() > 0) {
@@ -87,9 +98,14 @@ public class CollectionFragment extends Fragment {
         }
     }
 
-    public class MultiChoiceModeListener implements
-            GridView.MultiChoiceModeListener {
+    public class MultiChoiceModeListener implements GridView.MultiChoiceModeListener {
+
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark));
+            }
+
+            actionMode = mode;
             mode.setTitle(getString(R.string.select_items));
             mode.setSubtitle(R.string.one_item_selected);
 
@@ -124,6 +140,7 @@ public class CollectionFragment extends Fragment {
         }
 
         public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
             collectionAdapter.clearCheckedItems();
         }
 
@@ -155,5 +172,11 @@ public class CollectionFragment extends Fragment {
         });
         builder.setNegativeButton(R.string.no, null);
         builder.show();
+    }
+
+    public void closeMultiChoiceMode() {
+        if (actionMode != null) {
+            actionMode.finish();
+        }
     }
 }
