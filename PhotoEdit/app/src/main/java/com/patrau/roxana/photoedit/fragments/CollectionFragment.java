@@ -126,12 +126,10 @@ public class CollectionFragment extends Fragment {
                     Toast.makeText(getActivity(), "Canvases to share: " + checkedCanvases.size(), Toast.LENGTH_SHORT).show();
 
                     mode.finish();
-                    collectionAdapter.clearCheckedItems();
 
                     return true;
                 case R.id.action_delete:
                     displayDeleteDialog(mode);
-                    collectionAdapter.clearCheckedItems();
 
                     return true;
             }
@@ -166,8 +164,33 @@ public class CollectionFragment extends Fragment {
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                List<CanvasThumb> checkedCanvases = collectionAdapter.getCheckedItems();
+                final List<CanvasThumb> checkedCanvases = collectionAdapter.getCheckedItems();
                 mode.finish();
+                final MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.displayProgressDialog();
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < checkedCanvases.size(); i++) {
+                            File thumbnailImage = new File(Helper.getThumbsStorageDirectory(), checkedCanvases.get(i).getThumbnail());
+                            thumbnailImage.delete();
+                            File originalImage = new File(Helper.getCanvasStorageDirectory(), checkedCanvases.get(i).getThumbnail());
+                            originalImage.delete();
+                        }
+
+                        mainActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainActivity.dismissProgressDialog();
+                                Toast.makeText(mainActivity, R.string.deleted_canvases, Toast.LENGTH_SHORT).show();
+
+                                refreshCollection();
+                            }
+                        });
+                    }
+                });
+                thread.start();
             }
         });
         builder.setNegativeButton(R.string.no, null);

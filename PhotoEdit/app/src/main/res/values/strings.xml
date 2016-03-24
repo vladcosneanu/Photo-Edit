@@ -42,5 +42,6 @@
     <string name="delete">Delete</string>
     <string name="delete_dialog_title">Delete</string>
     <string name="delete_dialog_message">Delete the selected canvases?</string>
+    <string name="deleted_canvases">Successfully deleted the canvas(es)!</string>
 
 </resources>
