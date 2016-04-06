@@ -43,5 +43,8 @@
     <string name="delete_dialog_title">Delete</string>
     <string name="delete_dialog_message">Delete the selected canvases?</string>
     <string name="deleted_canvases">Successfully deleted the canvas(es)!</string>
-
+    <string name="brightness">Brightness</string>
+    <string name="hue">Hue</string>
+    <string name="value">"Value: "</string>
+    <string name="value_percent">%1$d%%</string>
 </resources>

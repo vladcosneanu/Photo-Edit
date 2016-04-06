@@ -39,6 +39,8 @@ public class EffectsFragment extends Fragment {
         effects.add(new Effect(getString(R.string.boost_color), R.drawable.ic_palette_black));
         effects.add(new Effect(getString(R.string.rotate), R.drawable.ic_rotate_right_black));
         effects.add(new Effect(getString(R.string.sepia), R.drawable.ic_filter_vintage_black));
+        effects.add(new Effect(getString(R.string.brightness), R.drawable.ic_brightness));
+        effects.add(new Effect(getString(R.string.hue), R.drawable.ic_tonality_black));
 
         // initialize the effecrs adapter
         effectsAdapter = new EffectsAdapter(getActivity(), effects);
@@ -73,6 +75,14 @@ public class EffectsFragment extends Fragment {
                             break;
                         case 5:
                             ((MainActivity) getActivity()).attachSepiaController();
+
+                            break;
+                        case 6:
+                            ((MainActivity) getActivity()).attachBrightnessController();
+
+                            break;
+                        case 7:
+                            ((MainActivity) getActivity()).attachHueController();
 
                             break;
                     }

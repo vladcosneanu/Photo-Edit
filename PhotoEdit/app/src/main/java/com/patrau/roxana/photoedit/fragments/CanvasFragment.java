@@ -14,8 +14,10 @@ import android.widget.TextView;
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
 import com.patrau.roxana.photoedit.fragments.effects.BoostColorControllersFragment;
+import com.patrau.roxana.photoedit.fragments.effects.BrightnessControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.FlipControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.GrayScaleControllersFragment;
+import com.patrau.roxana.photoedit.fragments.effects.HueControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.RotateControllersFragment;
 import com.patrau.roxana.photoedit.fragments.effects.SepiaControllersFragment;
 
@@ -128,5 +130,15 @@ public class CanvasFragment extends Fragment {
     public void attachSepiaController() {
         SepiaControllersFragment sepiaControllersFragment = new SepiaControllersFragment();
         attachControllersFragment(sepiaControllersFragment);
+    }
+
+    public void attachBrightnessController() {
+        BrightnessControllersFragment brightnessControllersFragment = new BrightnessControllersFragment();
+        attachControllersFragment(brightnessControllersFragment);
+    }
+
+    public void attachHueController() {
+        HueControllersFragment hueControllersFragment = new HueControllersFragment();
+        attachControllersFragment(hueControllersFragment);
     }
 }

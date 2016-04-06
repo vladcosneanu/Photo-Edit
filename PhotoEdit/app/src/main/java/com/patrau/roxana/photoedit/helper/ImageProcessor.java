@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 
 import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 import com.patrau.roxana.photoedit.transformations.BoostColorTask;
+import com.patrau.roxana.photoedit.transformations.BrightnessTask;
+import com.patrau.roxana.photoedit.transformations.HueTask;
 import com.patrau.roxana.photoedit.transformations.RotateTask;
 import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
@@ -44,5 +46,15 @@ public class ImageProcessor {
     public static void doSepia(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float redDepth, float greenDepth, float blueDepth) {
         SepiaTask sepiaTask = new SepiaTask(inputBitmap, transformationReceiver, redDepth, greenDepth, blueDepth);
         sepiaTask.execute(new String[]{});
+    }
+
+    public static void doBrightness(Bitmap inputBitmap, TransformationReceiver transformationReceiver, int value) {
+        BrightnessTask brightnessTask = new BrightnessTask(inputBitmap, transformationReceiver, (float) value / 100);
+        brightnessTask.execute(new String[]{});
+    }
+
+    public static void doHue(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float value) {
+        HueTask hueTask = new HueTask(inputBitmap, transformationReceiver, value);
+        hueTask.execute(new String[]{});
     }
 }

@@ -9,26 +9,17 @@ import android.os.AsyncTask;
 
 import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
 
-public class SepiaTask extends AsyncTask<String, Float, Bitmap> {
-
-    // constant factors
-    public static final float DEFAULT_RED = 0.299f;
-    public static final float DEFAULT_GREEN = 0.587f;
-    public static final float DEFAULT_BLUE = 0.114f;
+public class BrightnessTask extends AsyncTask<String, Float, Bitmap> {
 
     private Bitmap inputBitmap;
     private TransformationReceiver transformationReceiver;
 
-    private float redDepth = 0;
-    private float greenDepth = 0;
-    private float blueDepth = 0;
+    private float value = 0;
 
-    public SepiaTask(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float redDepth, float greenDepth, float blueDepth) {
+    public BrightnessTask(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float value) {
         this.inputBitmap = inputBitmap;
         this.transformationReceiver = transformationReceiver;
-        this.redDepth = redDepth;
-        this.greenDepth = greenDepth;
-        this.blueDepth = blueDepth;
+        this.value = value;
     }
 
     @Override
@@ -40,10 +31,10 @@ public class SepiaTask extends AsyncTask<String, Float, Bitmap> {
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         float[] mat = new float[]{
-                1 + (64 / 2) - (1 + (64 / 2)), 0, 0, 0, -1,
-                DEFAULT_RED, DEFAULT_GREEN + greenDepth, DEFAULT_BLUE, 0, 0,
-                DEFAULT_RED, DEFAULT_GREEN, DEFAULT_BLUE + blueDepth, 0, 0,
-                0, 0, 0, 1, 0,};
+                (1 + value), 0, 0, 0, 0,
+                0, (1 + value), 0, 0, 0,
+                0, 0, (1 + value), 0, 0,
+                0, 0, 0, 1, 0};
         ColorMatrixColorFilter filter = new ColorMatrixColorFilter(mat);
         paint.setColorFilter(filter);
         canvas.drawBitmap(inputBitmap, 0, 0, paint);

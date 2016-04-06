@@ -65,9 +65,9 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
 
         // set the initial values for the RGB text views
-        redTextView.setText(String.valueOf(redValue));
-        greenTextView.setText(String.valueOf(greenValue));
-        blueTextView.setText(String.valueOf(blueValue));
+        redTextView.setText(getString(R.string.value_percent, redValue));
+        greenTextView.setText(getString(R.string.value_percent, greenValue));
+        blueTextView.setText(getString(R.string.value_percent, blueValue));
     }
 
     @Override
@@ -87,15 +87,15 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         switch (seekBar.getId()) {
             case R.id.boost_color_red_seekbar:
                 redValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
-                redTextView.setText(String.valueOf(redValue));
+                redTextView.setText(getString(R.string.value_percent, redValue));
                 break;
             case R.id.boost_color_green_seekbar:
                 greenValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
-                greenTextView.setText(String.valueOf(greenValue));
+                greenTextView.setText(getString(R.string.value_percent, greenValue));
                 break;
             case R.id.boost_color_blue_seekbar:
                 blueValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
-                blueTextView.setText(String.valueOf(blueValue));
+                blueTextView.setText(getString(R.string.value_percent, blueValue));
                 break;
         }
 

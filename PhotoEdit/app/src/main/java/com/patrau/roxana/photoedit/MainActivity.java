@@ -532,6 +532,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         canvasFragment.attachSepiaController();
     }
 
+    public void attachBrightnessController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachBrightnessController();
+    }
+
+    public void attachHueController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachHueController();
+    }
+
     public void displayProgressDialog() {
         if (progressDialog != null) {
             progressDialog.show();
