@@ -10,6 +10,7 @@ import com.patrau.roxana.photoedit.transformations.RotateTask;
 import com.patrau.roxana.photoedit.transformations.FlipTask;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 import com.patrau.roxana.photoedit.transformations.InvertTask;
+import com.patrau.roxana.photoedit.transformations.SaturationTask;
 import com.patrau.roxana.photoedit.transformations.SepiaTask;
 
 /**
@@ -56,5 +57,10 @@ public class ImageProcessor {
     public static void doHue(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float value) {
         HueTask hueTask = new HueTask(inputBitmap, transformationReceiver, value);
         hueTask.execute(new String[]{});
+    }
+
+    public static void doSaturation(Bitmap inputBitmap, TransformationReceiver transformationReceiver, float value) {
+        SaturationTask saturationTask = new SaturationTask(inputBitmap, transformationReceiver, value);
+        saturationTask.execute(new String[]{});
     }
 }

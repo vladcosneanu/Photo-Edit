@@ -48,7 +48,7 @@ public class BrightnessControllersFragment extends Fragment implements SeekBar.O
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateValueTextView(seekBar);
     }
 
     @Override
@@ -60,13 +60,17 @@ public class BrightnessControllersFragment extends Fragment implements SeekBar.O
         // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
+        updateValueTextView(seekBar);
+
+        ImageProcessor.doBrightness(MainActivity.originalBitmap, activity, value);
+    }
+
+    private void updateValueTextView(SeekBar seekBar) {
         switch (seekBar.getId()) {
             case R.id.value_seekbar:
                 value = seekBar.getProgress() - SEEK_BAR_OFFSET;
                 valueTextView.setText(getString(R.string.value_percent, value));
                 break;
         }
-
-        ImageProcessor.doBrightness(MainActivity.originalBitmap, activity, value);
     }
 }

@@ -72,7 +72,7 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateValueTextView(seekBar);
     }
 
     @Override
@@ -84,6 +84,12 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
         // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
+        updateValueTextView(seekBar);
+
+        ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
+    }
+
+    private void updateValueTextView(SeekBar seekBar) {
         switch (seekBar.getId()) {
             case R.id.boost_color_red_seekbar:
                 redValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
@@ -98,7 +104,5 @@ public class BoostColorControllersFragment extends Fragment implements SeekBar.O
                 blueTextView.setText(getString(R.string.value_percent, blueValue));
                 break;
         }
-
-        ImageProcessor.doBoostColor(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 }

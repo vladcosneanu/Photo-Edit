@@ -2,6 +2,8 @@ package com.patrau.roxana.photoedit.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -122,8 +124,21 @@ public class CollectionFragment extends Fragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_share:
+                    ArrayList<Uri> files = new ArrayList<Uri>();
                     List<CanvasThumb> checkedCanvases = collectionAdapter.getCheckedItems();
-                    Toast.makeText(getActivity(), "Canvases to share: " + checkedCanvases.size(), Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < checkedCanvases.size(); i++) {
+                        File originalImage = new File(Helper.getCanvasStorageDirectory(), checkedCanvases.get(i).getThumbnail());
+                        Uri uri = Uri.fromFile(originalImage);
+                        files.add(uri);
+                    }
+
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_title));
+                    intent.setType("image/*");
+
+                    intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+                    startActivity(intent);
 
                     mode.finish();
 

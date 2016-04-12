@@ -74,7 +74,7 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateValueTextView(seekBar);
     }
 
     @Override
@@ -86,6 +86,12 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
+        updateValueTextView(seekBar);
+
+        ImageProcessor.doSepia(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
+    }
+
+    private void updateValueTextView(SeekBar seekBar) {
         switch (seekBar.getId()) {
             case R.id.sepia_red_seekbar:
                 redValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
@@ -100,7 +106,5 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
                 blueTextView.setText(String.valueOf(blueValue));
                 break;
         }
-
-        ImageProcessor.doSepia(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 }

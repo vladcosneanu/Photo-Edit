@@ -186,10 +186,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0 || inCanvasEditMode) {
+        if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
+        } else if (mPager.getCurrentItem() == 1 && inCanvasEditMode) {
+            // the user is editing an image, make sure he wants to cancel this
+            displayCancelDialog();
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
@@ -540,6 +543,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void attachHueController() {
         CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
         canvasFragment.attachHueController();
+    }
+
+    public void attachSaturationController() {
+        CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+        canvasFragment.attachSaturationController();
     }
 
     public void displayProgressDialog() {

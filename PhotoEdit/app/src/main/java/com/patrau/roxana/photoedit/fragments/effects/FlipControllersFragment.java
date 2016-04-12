@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;

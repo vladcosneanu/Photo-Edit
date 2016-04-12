@@ -75,7 +75,7 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateValueTextView(seekBar);
     }
 
     @Override
@@ -87,6 +87,12 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
         // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
+        updateValueTextView(seekBar);
+
+        ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
+    }
+
+    private void updateValueTextView(SeekBar seekBar) {
         switch (seekBar.getId()) {
             case R.id.grayscale_red_seekbar:
                 redValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
@@ -101,7 +107,5 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
                 blueTextView.setText(String.valueOf(blueValue));
                 break;
         }
-
-        ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
     }
 }

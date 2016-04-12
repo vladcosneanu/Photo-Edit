@@ -48,7 +48,7 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateValueTextView(seekBar);
     }
 
     @Override
@@ -60,13 +60,17 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
         // seek-bar value changed, apply the effect to the current bitmap
         MainActivity activity = (MainActivity) getActivity();
 
+        updateValueTextView(seekBar);
+
+        ImageProcessor.doRotate(MainActivity.originalBitmap, activity, degreeValue);
+    }
+
+    private void updateValueTextView(SeekBar seekBar) {
         switch (seekBar.getId()) {
             case R.id.degree_seekbar:
                 degreeValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
                 angleTextView.setText(String.valueOf(degreeValue));
                 break;
         }
-
-        ImageProcessor.doRotate(MainActivity.originalBitmap, activity, degreeValue);
     }
 }

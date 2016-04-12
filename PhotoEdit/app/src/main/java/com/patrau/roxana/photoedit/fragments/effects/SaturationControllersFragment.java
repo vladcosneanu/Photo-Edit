@@ -13,21 +13,21 @@ import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
 import com.patrau.roxana.photoedit.helper.ImageProcessor;
 
-public class HueControllersFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class SaturationControllersFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
     private View mView;
     private ImageButton backButton;
     private SeekBar valueSeekbar;
     private TextView valueTextView;
 
-    private static final int SEEK_BAR_OFFSET = 180;
+    private static final int SEEK_BAR_OFFSET = 100;
     private int value = SEEK_BAR_OFFSET;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflate the fragment's layout
-        mView = (ViewGroup) inflater.inflate(R.layout.fragment_hue, container, false);
+        mView = (ViewGroup) inflater.inflate(R.layout.fragment_saturation, container, false);
 
         // initialize the view objects
         valueSeekbar = (SeekBar) mView.findViewById(R.id.value_seekbar);
@@ -62,7 +62,7 @@ public class HueControllersFragment extends Fragment implements SeekBar.OnSeekBa
 
         updateValueTextView(seekBar);
 
-        ImageProcessor.doHue(MainActivity.originalBitmap, activity, value);
+        ImageProcessor.doSaturation(MainActivity.originalBitmap, activity, value);
     }
 
     private void updateValueTextView(SeekBar seekBar) {
