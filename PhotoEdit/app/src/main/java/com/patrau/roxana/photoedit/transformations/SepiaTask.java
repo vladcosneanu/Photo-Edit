@@ -40,7 +40,7 @@ public class SepiaTask extends AsyncTask<String, Float, Bitmap> {
         ColorMatrix cm = new ColorMatrix();
         cm.setSaturation(0);
         float[] mat = new float[]{
-                1 + (64 / 2) - (1 + (64 / 2)), 0, 0, 0, -1,
+                DEFAULT_RED + redDepth, DEFAULT_GREEN, DEFAULT_BLUE, 0, -1,
                 DEFAULT_RED, DEFAULT_GREEN + greenDepth, DEFAULT_BLUE, 0, 0,
                 DEFAULT_RED, DEFAULT_GREEN, DEFAULT_BLUE + blueDepth, 0, 0,
                 0, 0, 0, 1, 0,};
