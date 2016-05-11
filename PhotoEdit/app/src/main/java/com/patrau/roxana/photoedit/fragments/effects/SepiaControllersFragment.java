@@ -67,9 +67,9 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         ImageProcessor.doSepia(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
 
         // set the initial values for the RGB text views
-        redTextView.setText(String.valueOf(redValue));
-        greenTextView.setText(String.valueOf(greenValue));
-        blueTextView.setText(String.valueOf(blueValue));
+        redTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (redValue * 100))));
+        greenTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (greenValue * 100))));
+        blueTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (blueValue * 100))));
     }
 
     @Override
@@ -95,15 +95,15 @@ public class SepiaControllersFragment extends Fragment implements SeekBar.OnSeek
         switch (seekBar.getId()) {
             case R.id.sepia_red_seekbar:
                 redValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
-                redTextView.setText(String.valueOf(redValue));
+                redTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (redValue * 100))));
                 break;
             case R.id.sepia_green_seekbar:
                 greenValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
-                greenTextView.setText(String.valueOf(greenValue));
+                greenTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (greenValue * 100))));
                 break;
             case R.id.sepia_blue_seekbar:
                 blueValue = (float) (seekBar.getProgress() - SEEK_BAR_OFFSET) / SEEK_BAR_OFFSET_MULTIPLIER;
-                blueTextView.setText(String.valueOf(blueValue));
+                blueTextView.setText(getString(R.string.value_percent_string, String.valueOf((int) (blueValue * 100))));
                 break;
         }
     }

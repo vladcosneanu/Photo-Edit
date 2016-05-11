@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.patrau.roxana.photoedit.adapters.ScreenSlidePagerAdapter;
 import com.patrau.roxana.photoedit.fragments.CanvasFragment;
 import com.patrau.roxana.photoedit.fragments.CollectionFragment;
+import com.patrau.roxana.photoedit.fragments.EffectsFragment;
 import com.patrau.roxana.photoedit.helper.Helper;
 import com.patrau.roxana.photoedit.interfaces.CanvasSaver;
 import com.patrau.roxana.photoedit.interfaces.TransformationReceiver;
@@ -191,8 +193,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
         } else if (mPager.getCurrentItem() == 1 && inCanvasEditMode) {
-            // the user is editing an image, make sure he wants to cancel this
-            displayCancelDialog();
+            CanvasFragment canvasFragment = ((CanvasFragment) mPagerAdapter.getItem(1));
+            Fragment currentControllersFragment = canvasFragment.getCurrentControllersFragment();
+            if (currentControllersFragment != null && !(currentControllersFragment instanceof EffectsFragment)) {
+                // the current fragment is not the Effects GridView fragment
+                // attach it before cancelling the Canvas edit mode
+                canvasFragment.attachEffectsFragment();
+            } else {
+                // the current fragment is the Effects GridView fragment
+                // the user is editing an image, make sure he wants to cancel this
+                displayCancelDialog();
+            }
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);

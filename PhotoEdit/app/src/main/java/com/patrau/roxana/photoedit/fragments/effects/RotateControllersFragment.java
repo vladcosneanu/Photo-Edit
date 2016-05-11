@@ -38,7 +38,7 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
         angleTextView = (TextView) mView.findViewById(R.id.angle_textview);
 
         // set the initial values for the RGB text views
-        angleTextView.setText(String.valueOf(degreeValue - SEEK_BAR_OFFSET));
+        angleTextView.setText(getString(R.string.value_degrees, degreeValue - SEEK_BAR_OFFSET));
 
         backButton = (ImageButton) mView.findViewById(R.id.back_button);
         backButton.setOnClickListener((MainActivity) getActivity());
@@ -69,7 +69,7 @@ public class RotateControllersFragment extends Fragment implements SeekBar.OnSee
         switch (seekBar.getId()) {
             case R.id.degree_seekbar:
                 degreeValue = seekBar.getProgress() - SEEK_BAR_OFFSET;
-                angleTextView.setText(String.valueOf(degreeValue));
+                angleTextView.setText(getString(R.string.value_degrees, degreeValue));
                 break;
         }
     }

@@ -147,4 +147,8 @@ public class CanvasFragment extends Fragment {
         SaturationControllersFragment saturationControllersFragment = new SaturationControllersFragment();
         attachControllersFragment(saturationControllersFragment);
     }
+
+    public Fragment getCurrentControllersFragment() {
+        return getChildFragmentManager().findFragmentById(R.id.controllers_frame);
+    }
 }

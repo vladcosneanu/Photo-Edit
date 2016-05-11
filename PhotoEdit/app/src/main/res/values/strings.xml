@@ -48,5 +48,7 @@
     <string name="saturation">Saturation</string>
     <string name="value">"Value: "</string>
     <string name="value_percent">%1$d%%</string>
+    <string name="value_percent_string">%1$s%%</string>
     <string name="share_title">Share Canvases</string>
+    <string name="value_degrees">%1$d&#xb0;</string>
 </resources>

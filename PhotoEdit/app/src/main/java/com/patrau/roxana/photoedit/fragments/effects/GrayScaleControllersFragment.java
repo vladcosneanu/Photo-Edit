@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.patrau.roxana.photoedit.MainActivity;
 import com.patrau.roxana.photoedit.R;
+import com.patrau.roxana.photoedit.helper.Helper;
 import com.patrau.roxana.photoedit.helper.ImageProcessor;
 import com.patrau.roxana.photoedit.transformations.GrayScaleTask;
 
@@ -68,9 +69,9 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
         ImageProcessor.doGreyscale(MainActivity.originalBitmap, activity, redValue, greenValue, blueValue);
 
         // set the initial values for the RGB text views
-        redTextView.setText(String.valueOf(redValue));
-        greenTextView.setText(String.valueOf(greenValue));
-        blueTextView.setText(String.valueOf(blueValue));
+        redTextView.setText(getString(R.string.value_percent_string, String.valueOf(redValue * 100)));
+        greenTextView.setText(getString(R.string.value_percent_string, String.valueOf(greenValue * 100)));
+        blueTextView.setText(getString(R.string.value_percent_string, String.valueOf(blueValue * 100)));
     }
 
     @Override
@@ -96,15 +97,15 @@ public class GrayScaleControllersFragment extends Fragment implements SeekBar.On
         switch (seekBar.getId()) {
             case R.id.grayscale_red_seekbar:
                 redValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
-                redTextView.setText(String.valueOf(redValue));
+                redTextView.setText(getString(R.string.value_percent_string, String.valueOf(redValue * 100)));
                 break;
             case R.id.grayscale_green_seekbar:
                 greenValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
-                greenTextView.setText(String.valueOf(greenValue));
+                greenTextView.setText(getString(R.string.value_percent_string, String.valueOf(greenValue * 100)));
                 break;
             case R.id.grayscale_blue_seekbar:
                 blueValue = (float) seekBar.getProgress() / SEEK_BAR_OFFSET_MULTIPLIER;
-                blueTextView.setText(String.valueOf(blueValue));
+                blueTextView.setText(getString(R.string.value_percent_string, String.valueOf(blueValue * 100)));
                 break;
         }
     }
