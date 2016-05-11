@@ -130,8 +130,10 @@ public class Helper {
 
         if (thumbsStorageDirectory.exists()) {
             File files[] = thumbsStorageDirectory.listFiles();
-            for (File file: files) {
-                collection.add(file.getName());
+            if (files != null) {
+                for (File file : files) {
+                    collection.add(file.getName());
+                }
             }
         }
 

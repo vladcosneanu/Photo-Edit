@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * Display a message that asks the user to enable Storage Permission for the application
      */
-    private void displayStoragePermissionSnackBar() {
+    public void displayStoragePermissionSnackBar() {
         Snackbar snackbar = Snackbar.make(coordinatorLayout, R.string.provide_storage_permission, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.settings, new View.OnClickListener() {
                     @Override

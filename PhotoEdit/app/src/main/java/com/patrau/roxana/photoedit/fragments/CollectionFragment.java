@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -66,8 +67,15 @@ public class CollectionFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        refreshCollection();
+    public void onResume() {
+        super.onResume();
+        if (!Environment.getExternalStorageDirectory().canWrite()) {
+            ((MainActivity) getActivity()).displayStoragePermissionSnackBar();
+
+            return;
+        } else {
+            refreshCollection();
+        }
     }
 
     @Override
