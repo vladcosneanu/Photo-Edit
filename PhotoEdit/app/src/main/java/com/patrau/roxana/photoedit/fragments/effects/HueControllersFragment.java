@@ -38,7 +38,7 @@ public class HueControllersFragment extends Fragment implements SeekBar.OnSeekBa
         valueTextView = (TextView) mView.findViewById(R.id.value_textview);
 
         // set the initial values for the RGB text views
-        valueTextView.setText(String.valueOf(value - SEEK_BAR_OFFSET));
+        valueTextView.setText(getString(R.string.value_degrees, value - SEEK_BAR_OFFSET));
 
         backButton = (ImageButton) mView.findViewById(R.id.back_button);
         backButton.setOnClickListener((MainActivity) getActivity());
@@ -69,7 +69,7 @@ public class HueControllersFragment extends Fragment implements SeekBar.OnSeekBa
         switch (seekBar.getId()) {
             case R.id.value_seekbar:
                 value = seekBar.getProgress() - SEEK_BAR_OFFSET;
-                valueTextView.setText(String.valueOf(value));
+                valueTextView.setText(getString(R.string.value_degrees, value));
                 break;
         }
     }

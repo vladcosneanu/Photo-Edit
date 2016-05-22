@@ -2,7 +2,6 @@ package com.patrau.roxana.photoedit.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.AsyncTask;
@@ -25,8 +24,6 @@ public class InvertTask extends AsyncTask<String, Float, Bitmap> {
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap.getWidth(), inputBitmap.getHeight(), inputBitmap.getConfig());
         Canvas canvas = new Canvas(outputBitmap);
         Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
         float[] mat = new float[]{
                 -1, 0, 0, 0, 255,
                 0, -1, 0, 0, 255,

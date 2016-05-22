@@ -28,8 +28,6 @@ public class HueTask extends AsyncTask<String, Float, Bitmap> {
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap.getWidth(), inputBitmap.getHeight(), inputBitmap.getConfig());
         Canvas canvas = new Canvas(outputBitmap);
         Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
 
         float cosVal = (float) Math.cos(value);
         float sinVal = (float) Math.sin(value);

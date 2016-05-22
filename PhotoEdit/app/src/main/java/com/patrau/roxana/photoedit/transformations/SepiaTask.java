@@ -2,7 +2,6 @@ package com.patrau.roxana.photoedit.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.os.AsyncTask;
@@ -37,8 +36,6 @@ public class SepiaTask extends AsyncTask<String, Float, Bitmap> {
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap.getWidth(), inputBitmap.getHeight(), inputBitmap.getConfig());
         Canvas canvas = new Canvas(outputBitmap);
         Paint paint = new Paint();
-        ColorMatrix cm = new ColorMatrix();
-        cm.setSaturation(0);
         float[] mat = new float[]{
                 DEFAULT_RED + redDepth, DEFAULT_GREEN, DEFAULT_BLUE, 0, -1,
                 DEFAULT_RED, DEFAULT_GREEN + greenDepth, DEFAULT_BLUE, 0, 0,
