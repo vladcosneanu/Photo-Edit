@@ -9,11 +9,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.patrau.roxana.photoedit.adapters.ScreenSlidePagerAdapter;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton editButton;
     private FloatingActionButton photoButton;
     private FloatingActionButton openButton;
+    private TabLayout tabLayout;
     private ProgressDialog progressDialog;
     private boolean canvasButtonsDisplayed = false;
     private File currentPhotoFile;
@@ -85,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (CustomViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.setContext(this);
         mPager.setAdapter(mPagerAdapter);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -138,6 +143,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         photoButton.setOnClickListener(this);
         openButton = (FloatingActionButton) findViewById(R.id.open_button);
         openButton.setOnClickListener(this);
+
+        //set tablayout with viewpager
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(mPager);
+        // adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
+        mPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        // setting tabs from adpater
+        tabLayout.setTabsFromPagerAdapter(mPagerAdapter);
 
         // make sure that canvas items can be saved
         if (!Environment.getExternalStorageDirectory().canWrite()) {
@@ -206,7 +220,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else {
             // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            final int pageIndex = mPager.getCurrentItem() - 1;
+            // make the selection to the tablayout as well
+            tabLayout.setScrollPosition(pageIndex, 0f, true);
+            mPager.setCurrentItem(pageIndex);
         }
     }
 
@@ -260,6 +277,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inCanvasEditMode = false;
 
         setViewPagerEnabled(true);
+        setTabLayoutEnabled(true);
         displayDoneAndCancelMenuItems(false);
         ((CanvasFragment) mPagerAdapter.getItem(1)).hideControllersFrameContainer();
 
@@ -380,6 +398,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         hideAllFloatingActionButtons();
         setViewPagerEnabled(false);
+        setTabLayoutEnabled(false);
         displayDoneAndCancelMenuItems(true);
 
         CanvasFragment canvasFragment = (CanvasFragment) mPagerAdapter.getItem(1);
@@ -394,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         inCanvasEditMode = false;
 
         if (mPager.getCurrentItem() != 1) {
+            tabLayout.setScrollPosition(1, 0f, true);
             mPager.setCurrentItem(1, true);
         }
 
@@ -442,6 +462,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void setViewPagerEnabled(boolean enabled) {
         mPager.setPagingEnabled(enabled);
+    }
+
+    public void setTabLayoutEnabled(boolean enabled) {
+        LinearLayout tabStrip = ((LinearLayout) tabLayout.getChildAt(0));
+        tabStrip.setEnabled(false);
+        for (int i = 0; i < tabStrip.getChildCount(); i++) {
+            tabStrip.getChildAt(i).setClickable(enabled);
+        }
     }
 
     public void displayDoneAndCancelMenuItems(boolean display) {
